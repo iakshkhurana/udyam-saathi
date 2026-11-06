@@ -1,5 +1,5 @@
 # lefts.md – Status of the Udyam Saathi build
-_Last updated: 2026-11-06 · Current phase: 4_
+_Last updated: 2026-11-06 · Current phase: 5_
 
 ## ✅ Done
 - Phase 0: repo structure, `.gitignore`, `.env.example`, `lefts.md`; data moved to `data/raw/YTL_TrackA_Udyam_Digital_Data/`
@@ -7,6 +7,7 @@ _Last updated: 2026-11-06 · Current phase: 4_
 - Phase 2: `services/rules_engine.py` (eligibility, segment bases, needs→products, dependencies, segment default bundles, quantities, pricing, savings line, EN/HI "why" text, final validation that raises), `services/audit.py` + `scripts/audit_sold_bundles.py` → `docs/rules_audit.md` (+ `.json`); `tests/test_rules_engine.py` incl. 500-profile property test – all pass
 - Phase 3: `services/advisor.py` (slot state machine, free-text parsing for numbers/cities/business types/needs/products/GSTIN, EN/HI guided mode with chips, clarifying questions, refusal of "ignore the rules", callback → back-office lead, LLM mode with tools `lookup_city_tier`/`map_business_type`/`lookup_gstin`/`recommend_bundle`/`save_profile_slot`/`request_callback`, automatic fallback to guided mode if the LLM call fails), `services/llm_client.py` (provider-agnostic `LLMClient`, Anthropic implementation), `services/propensity.py`, `routers/advisor.py`; `tests/test_advisor_scenarios.py` 15/15 → `docs/advisor_test_results.md`
 - Phase 4: `services/quote.py` (quote from session/profile, toggles + quantities re-validated by the rules engine, base-off removes dependents with a warning, WhatsApp share text/link), `routers/quote.py` (`POST/GET/PATCH /quotes`, `/accept` → order), `routers/consent.py` (DPDP consent record: purposes, notice version, language, hashed IP; `require_consent` gate for KYC), `services/storage.py` (Fernet-encrypted document store, audit log, retention job), `routers/privacy.py`, `services/tracker.py` + `routers/orders.py` (order creation and stage events)
+- Phase 5: Smart KYC – `services/kyc/ocr.py` (saturation-based watermark removal, Laplacian blur score, projection-profile deskew + OCR-label fallback −12°…+12°, Tesseract psm 6 with word positions, extra adaptive/Otsu/psm-4 passes for identifiers), `parsers.py` (doc-type detection, column-aware label/value parsing, wrapped-address joining, signatory stacked layout), `checks.py` (C01–C18), `service.py` (encrypted store, evaluation, verify → order status, sample loader), `routers/kyc.py` (all endpoints consent-gated, 403 without consent), `scripts/calibrate_blur.py`, `scripts/run_kyc_samples.py` → `docs/kyc_results.md`; `tests/test_kyc_samples.py` 15/15, `tests/test_api.py` 12/12
 
 ## ⏳ Left for humans (do these yourself)
 - [ ] (filled in as the build progresses)
@@ -38,11 +39,24 @@ _Last updated: 2026-11-06 · Current phase: 4_
 - Withdrawing KYC consent before activation cancels the order and deletes documents; after activation it only deletes documents (the service keeps running).
 - The quote is a "print-to-PDF" view (browser print) rather than a server-generated PDF.
 
+- OCR preprocessing: the pink "SYNTHETIC SPECIMEN" watermark is removed by colour saturation before OCR, and the image is upscaled 1.5× for every document (spec: only if width < 1,200 px) – this read more accurately on the specimens. Adaptive threshold (spec step 4) is used as a secondary pass; the primary pass is the cleaned grayscale, which produced fewer digit errors (e.g. "2020-9210").
+- Identifiers are re-read from up to 3 extra OCR passes only when the primary read is missing or fails validation; a pass is accepted only if it is checksum-valid as read. Characters are never changed to force a checksum (K06/K10 read identically invalid in every pass).
+- `BLUR_THRESHOLD = 466` (midpoint of K04_gst 1.0 and next-lowest K07_udyam 930.7).
+- C04 "closest registry GSTIN" uses edit distance ≤ 1 after collapsing OCR-ambiguous pairs (O≡0, I≡1); for K06 the closest is `08YKZXS5189L1ZO` (digit 5 changed to 8 = tampered), for K10 `27QHJXK0658U1ZL` (J→I). Reviewer evidence only; never used to pass.
+- C05 is marked "skip" (neutral) when C04 already failed; a 4th status `skip` = not applicable.
+- C07 for "<Person> (Prop. <Business>)" names compares the person and business parts separately (min score) – a whole-string comparison would only warn on K07.
+- C17 constitution comes from the registry (by GSTIN); if the GST certificate is unreadable (K04) it is inferred from "LLP"/"Pvt Ltd" in the business name.
+- C18 looks up the lead by the certificate GSTIN, then by Udyam number (K10's GSTIN is tampered, so the lead is found by Udyam).
+- Final status mapping: C01 fail → INCOMPLETE; C02 fail → RETAKE; other fail → FAIL; warnings only → PASS_WITH_WARNINGS (order → `KYC_REVIEW`); clean → PASS (`KYC_VERIFIED`).
+- Wrapped addresses are joined without a space when line 1 ends in a letter and line 2 starts lowercase ("Maharashtr|a" → "Maharashtra").
+- "Fetch from DigiLocker" and "e-Sign with Aadhaar OTP" are simulated (OTP `123456`); DigiLocker in the demo loads the selected specimen applicant.
+
 ## ❌ Known issues / failing tests
 - none yet
 
 ## 📊 Key results (for the PPT)
 - Rules audit: 48 / 368 sold bundles (13%) break catalogue rules – city tier 24, GSTIN 12, dependency 9, employees 8 (exact match with the expected counts)
+- KYC: 12/12 applicants match the derived answer key (primary flag caught 12/12) – see `docs/kyc_results.md`
 - Advisor tests: 15/15 pass in guided mode (scenario 6 asserts the English fallback note; the Tamil reply test runs only with `TEST_ANTHROPIC_API_KEY`)
 
 ## ▶️ How to run (short)
