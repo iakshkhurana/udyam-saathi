@@ -279,6 +279,9 @@ def run_checks(db: Session, docs: dict[str, dict], typed_gstin: str | None, type
                 out.append(_check("C18", "warn", "Signatory differs from the contact we have on file – reviewer to confirm",
                                   "हस्ताक्षरकर्ता हमारे रिकॉर्ड के संपर्क से अलग हैं – टीम पुष्टि करेगी",
                                   lead_id=lead.lead_id))
+    owner = {cid: doc for doc, ids in DOC_CHECKS.items() for cid in ids}
+    for c in out:
+        c["doc"] = c["doc"] or owner.get(c["id"])
     return out
 
 
@@ -294,6 +297,6 @@ def final_status(checks: list[dict]) -> str:
 
 
 def doc_status(doc_type: str, checks: list[dict]) -> str:
-    relevant = [c for c in checks if c.get("doc") == doc_type or c["id"] in DOC_CHECKS[doc_type]]
+    relevant = [c for c in checks if c.get("doc") == doc_type]
     statuses = {c["status"] for c in relevant}
     return "fail" if "fail" in statuses else "warn" if "warn" in statuses else "pass"

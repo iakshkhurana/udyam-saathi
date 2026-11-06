@@ -9,7 +9,7 @@ _Last updated: 2026-11-06 · Current phase: 9_
 - Phase 4: `services/quote.py` (quote from session/profile, toggles + quantities re-validated by the rules engine, base-off removes dependents with a warning, WhatsApp share text/link), `routers/quote.py` (`POST/GET/PATCH /quotes`, `/accept` → order), `routers/consent.py` (DPDP consent record: purposes, notice version, language, hashed IP; `require_consent` gate for KYC), `services/storage.py` (Fernet-encrypted document store, audit log, retention job), `routers/privacy.py`, `services/tracker.py` + `routers/orders.py` (order creation and stage events)
 - Phase 5: Smart KYC – `services/kyc/ocr.py` (saturation-based watermark removal, Laplacian blur score, projection-profile deskew + OCR-label fallback −12°…+12°, Tesseract psm 6 with word positions, extra adaptive/Otsu/psm-4 passes for identifiers), `parsers.py` (doc-type detection, column-aware label/value parsing, wrapped-address joining, signatory stacked layout), `checks.py` (C01–C18), `service.py` (encrypted store, evaluation, verify → order status, sample loader), `routers/kyc.py` (all endpoints consent-gated, 403 without consent), `scripts/calibrate_blur.py`, `scripts/run_kyc_samples.py` → `docs/kyc_results.md`; `tests/test_kyc_samples.py` 15/15, `tests/test_api.py` 12/12
 - Phase 6: `services/tracker.py` – stages QUOTE_ACCEPTED → CONSENT_GIVEN → KYC_VERIFIED/KYC_REVIEW → INSTALL_SCHEDULED → INSTALLED → ACTIVATED (+ DELAYED, CANCELLED), install date = KYC date + max install days skipping Sundays, activation +1 day, EN/HI WhatsApp-style notifications for every event, fictional technician card, proactive delay (reason + new date + apology + automatic ₹100 credit), NPS after activation, referral → back-office lead; demo endpoints `/orders/{id}/advance` and `/delay`
-- Phase 7: frontend is being built by a parallel Claude session (`airtel-50`) assigned by the user to `frontend/`; this session does not edit `frontend/`. API contract sent to that session.
+- Phase 7 (built by the parallel session `airtel-50`, commit 584f0df): `frontend/` – React 18 + Vite 5 + TS + Tailwind 3 + Framer Motion, react-router, react-i18next (EN/HI on every screen; advisor chat in 10 languages). Screens: Landing (scroll-driven tilted hero window, count-up stats, step progress line), Advisor (chips incl. multi-select needs, Web Speech mic, typing indicator, AI/Guided badge, bundle card, abandon beacon), Quote (animated total, toggles/steppers re-validated by PATCH, warnings, WhatsApp share, print-to-PDF), Consent (DPDP notice), Smart KYC (GSTIN/Udyam lookup card, 4 upload tiles with per-check fix-it text, K01–K12 sample loader, DigiLocker mock, OTP sheet), Tracker (15 s auto-refresh, delay banner + credit, technician card, WhatsApp-style updates, NPS + referral, `?demo=1` controls, copy link), Privacy centre, Back office (dark theme, PIN, 4 tabs). Mobile-first 430px app frame; landing and back office are full-width responsive.
 - Phase 8: `routers/backoffice.py` (PIN via `X-Backoffice-Pin`; advisor leads not closed incl. abandoned >30 min and referrals, historical dropped leads with propensity score + recommended action and filters, KYC review queue with approve/reject, audited full-ID reviewer view, rules audit), `scripts/train_propensity.py` (ROC-AUC 0.68, model in `backend/models/propensity.joblib`, scores stored on leads), `scripts/analyze_leads.py` → `docs/insights.md` + `docs/charts/*.png` (all spec figures reproduced exactly); back-office tests added – full suite 64 passed, 1 skipped
 - Phase 9: `routers/whatsapp.py` – Twilio-format webhook `POST /api/webhooks/whatsapp` (form `From`/`Body`), same advisor engine, numbered options instead of chips, "See quote" replies with the quote link, deterministic session per sender (hashed number, never stored raw), optional `X-Twilio-Signature` validation when `TWILIO_AUTH_TOKEN` is set, TwiML reply; `tests/test_whatsapp.py` (fake Twilio payloads) 2/2. Voice input (Web Speech API) belongs to the frontend session.
 
@@ -63,6 +63,10 @@ _Last updated: 2026-11-06 · Current phase: 9_
 - Propensity labels use the spec cut-offs (Hot ≥ 70, Warm 40–69, Cold < 40) on `class_weight="balanced"` probabilities, so many dropped leads score Hot; the list is meant to be read as a ranking (sorted by score). Calibrating cut-offs to call-centre capacity is a business decision.
 - Charts avoid dual axes: activation rate and CAC by source are two side-by-side panels.
 
+- Visual design is a purple/lavender theme (#5A3BF0) at the user's request instead of the spec's Airtel red `#E40000`. Design mockups: https://claude.ai/artifact/7tWS5opu6frigPgoPf3iHq (private unless shared).
+- The DigiLocker button is a UI-only mock.
+- Every KYC check carries the document it belongs to (`doc`); only C01 (completeness) is order-level.
+
 ## ❌ Known issues / failing tests
 - none yet
 
@@ -74,7 +78,8 @@ _Last updated: 2026-11-06 · Current phase: 9_
 - Advisor tests: 15/15 pass in guided mode (scenario 6 asserts the English fallback note; the Tamil reply test runs only with `TEST_ANTHROPIC_API_KEY`)
 
 ## ▶️ How to run (short)
-- pending
+- backend: see README
+- frontend: `cd frontend && npm install && npm run dev` → http://localhost:5173 (needs the backend on :8000)
 
 ## 🔜 Suggested next steps (finale)
 - pending
