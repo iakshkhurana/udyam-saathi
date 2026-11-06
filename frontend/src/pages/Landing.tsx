@@ -1,15 +1,25 @@
-import { animate, motion, useInView, useMotionValueEvent, useScroll, useSpring, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { animate, AnimatePresence, motion, useInView, useMotionValueEvent, useScroll, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { LangToggle } from "../components/AppShell";
-import { ArrowRight, Chat, Clock, DocCheck, House, Lines } from "../components/Icons";
+import { ArrowRight, Chat, Check, Clock, DocCheck, House, Lines } from "../components/Icons";
 import { Reveal } from "../components/ui";
 import { CHAT_LANGUAGES, setChatLang } from "../i18n";
 import { cx } from "../lib/format";
 
 type Stat = { value: string; label: string };
 type Step = { t: string; d: string };
+type Segment = { key: string; tab: string; bundle: string; body: string; items: string[]; price: string; alt: string; credit: string };
+
+const ease = [0.2, 0.7, 0.2, 1] as const;
+
+const PHOTOS: Record<string, { src: string; pos: string }> = {
+  micro: { src: "/images/kirana.jpg", pos: "50% 68%" },
+  prof: { src: "/images/office.jpg", pos: "70% 40%" },
+  multi: { src: "/images/cafe.jpg", pos: "50% 50%" },
+  mfg: { src: "/images/factory.jpg", pos: "38% 40%" },
+};
 
 function Logo() {
   return (
@@ -21,6 +31,49 @@ function Logo() {
         Udyam Saathi<span className="text-brand-600">.</span>
       </span>
     </Link>
+  );
+}
+
+function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <span className={cx("inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[.14em] text-brand-700", className)}>
+      <span aria-hidden className="h-1.5 w-1.5 rounded-[2px] bg-brand-600" />
+      {children}
+    </span>
+  );
+}
+
+/** Marker-style highlight that sweeps in under the text when scrolled into view. */
+function Mark({ children }: { children: ReactNode }) {
+  return (
+    <motion.span
+      initial={{ backgroundSize: "0% 100%" }}
+      whileInView={{ backgroundSize: "100% 100%" }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.9, ease, delay: 0.25 }}
+      className="bg-no-repeat px-1 [background-image:linear-gradient(transparent_58%,#D9D0FF_58%,#D9D0FF_92%,transparent_92%)] [box-decoration-break:clone]"
+    >
+      {children}
+    </motion.span>
+  );
+}
+
+function CursorTag({ label, tone, className, delay }: { label: string; tone: "brand" | "ink"; className: string; delay: number }) {
+  return (
+    <motion.span
+      aria-hidden
+      initial={{ opacity: 0, scale: 0.6, y: 8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 320, damping: 18, delay }}
+      className={cx("pointer-events-none absolute flex items-start gap-0.5", className)}
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14" className={tone === "brand" ? "text-brand-600" : "text-ink"}>
+        <path d="M1 1l11 4.6-4.7 1.7L5.6 12z" fill="currentColor" />
+      </svg>
+      <span className={cx("mt-2.5 whitespace-nowrap rounded-full px-2 py-0.5 font-sans text-[11px] font-semibold tracking-normal text-white", tone === "brand" ? "bg-brand-600" : "bg-ink")}>
+        {label}
+      </span>
+    </motion.span>
   );
 }
 
@@ -151,7 +204,7 @@ function Hero() {
   const fade = (d: number) => ({
     initial: { opacity: 0, y: 24 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.8, ease: [0.2, 0.7, 0.2, 1] as const, delay: d },
+    transition: { duration: 0.8, ease, delay: d },
   });
 
   return (
@@ -162,17 +215,34 @@ function Hero() {
         style={{ y: beamY }}
         className="pointer-events-none absolute -top-10 left-1/2 h-[700px] w-[900px] -translate-x-1/2 animate-beam [background:conic-gradient(from_180deg_at_50%_0%,transparent_150deg,rgba(255,255,255,.55)_170deg,transparent_178deg,rgba(255,255,255,.45)_184deg,transparent_194deg,rgba(255,255,255,.5)_204deg,transparent_214deg)]"
       />
+      <span aria-hidden className="pointer-events-none absolute left-[12%] top-[34%] hidden animate-floaty text-2xl font-light text-brand-400 lg:block">+</span>
+      <span aria-hidden className="pointer-events-none absolute right-[14%] top-[52%] hidden animate-floaty text-xl font-light text-brand-400 [animation-delay:1.5s] lg:block">+</span>
+
       <div className="relative mx-auto max-w-[900px] pt-6 text-center">
         <motion.div {...fade(0.05)} className="inline-flex items-center gap-2 rounded-full border border-white bg-white/70 py-1.5 pl-1.5 pr-3.5 text-[13px] font-medium text-ink-soft">
           <span className="rounded-full bg-ink px-2.5 py-0.5 text-xs font-semibold text-white">New</span>
           {t("landing.badge")}
         </motion.div>
-        <motion.h1 {...fade(0.12)} className="mt-6 text-[clamp(40px,6.4vw,76px)] font-bold leading-[1.04] tracking-[-0.035em]">
+        <motion.h1 {...fade(0.12)} className="mt-6 text-[clamp(40px,6.4vw,76px)] font-bold leading-[1.08] tracking-[-0.035em]">
           {t("landing.title1")}
           <br />
-          <span className="bg-gradient-to-r from-brand-700 via-brand-500 to-brand-700 bg-clip-text text-transparent">{t("landing.title2")}</span>
+          {t("landing.title2Pre")}
+          <span className="relative inline-block whitespace-nowrap px-[.14em]">
+            <motion.span
+              aria-hidden
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.7, ease, delay: 0.75 }}
+              className="absolute inset-x-0 bottom-[.04em] top-[.1em] origin-left -rotate-[1.5deg] rounded-[.22em] bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_14px_30px_-10px_rgba(90,59,240,.6)]"
+            />
+            <motion.span initial={{ color: "#16132D" }} animate={{ color: "#FFFFFF" }} transition={{ delay: 0.95, duration: 0.3 }} className="relative">
+              {t("landing.title2Mark")}
+            </motion.span>
+            <CursorTag label={t("landing.cursorSaathi")} tone="brand" delay={1.3} className="hidden sm:left-full sm:top-[-2px] sm:ml-1 sm:flex" />
+            <CursorTag label={t("landing.cursorYou")} tone="ink" delay={1.6} className="-bottom-8 -left-3" />
+          </span>
         </motion.h1>
-        <motion.p {...fade(0.2)} className="mx-auto mt-6 max-w-[620px] text-lg leading-relaxed text-[#4A4766]">
+        <motion.p {...fade(0.2)} className="mx-auto mt-8 max-w-[620px] text-lg leading-relaxed text-[#4A4766]">
           {t("landing.sub")}
         </motion.p>
         <motion.div {...fade(0.28)} className="mt-8 flex flex-wrap justify-center gap-3">
@@ -204,6 +274,34 @@ function Hero() {
   );
 }
 
+function Marquee() {
+  const { t } = useTranslation();
+  const items = t("landing.marquee", { returnObjects: true }) as string[];
+  const row = (hidden: boolean) => (
+    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center gap-x-10 pr-10">
+      {items.map((s) => (
+        <li key={s} className="flex items-center gap-3 whitespace-nowrap font-display text-lg font-bold text-[#8A86A6]">
+          <span aria-hidden className="grid h-7 w-7 place-items-center rounded-lg border border-line bg-white text-brand-500">
+            <House size={14} />
+          </span>
+          {s}
+        </li>
+      ))}
+    </ul>
+  );
+  return (
+    <section className="pt-14">
+      <p className="px-4 text-center text-sm font-medium text-ink-muted">{t("landing.marqueeTitle")}</p>
+      <div className="fade-x group mt-6 overflow-hidden">
+        <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused]">
+          {row(false)}
+          {row(true)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -216,7 +314,7 @@ function CountUp({ value }: { value: string }) {
     const decimals = m[2].includes(".") ? m[2].split(".")[1].length : 0;
     const controls = animate(0, target, {
       duration: 1.4,
-      ease: [0.2, 0.7, 0.2, 1],
+      ease,
       onUpdate: (v) => setShown(`${m[1]}${v.toFixed(decimals)}${m[3]}`),
     });
     return () => controls.stop();
@@ -237,16 +335,18 @@ function Features() {
 
   const small = "card relative h-full overflow-hidden p-7 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_50px_-28px_rgba(74,47,214,.5)]";
   const iconBox = "grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600";
+  const index = (n: number) => <span aria-hidden className="absolute right-6 top-6 font-mono text-xs text-[#B9B4D6]">/0{n}</span>;
 
   return (
     <section id="features" className="scroll-mt-24 px-4 py-20">
       <div className="mx-auto max-w-[1120px]">
         <Reveal className="mx-auto max-w-[720px] text-center">
-          <span className="inline-block rounded-full bg-brand-100 px-3 py-1.5 text-[13px] font-semibold text-brand-700">{t("landing.oldTag")}</span>
-          <h2 className="mt-4 text-[clamp(30px,4.2vw,48px)] font-bold leading-[1.1] tracking-[-0.03em]">
+          <Eyebrow>{t("landing.eyebrowFeatures")}</Eyebrow>
+          <h2 className="mt-4 text-[clamp(30px,4.2vw,48px)] font-bold leading-[1.14] tracking-[-0.03em]">
             {t("landing.oldTitle1")}
             <br />
-            {t("landing.oldTitle2")}
+            {t("landing.oldTitle2Pre")}
+            <Mark>{t("landing.oldTitle2Mark")}</Mark>
           </h2>
           <p className="mt-3.5 text-base leading-relaxed text-[#4A4766]">{t("landing.oldSub")}</p>
         </Reveal>
@@ -276,6 +376,7 @@ function Features() {
 
           <Reveal delay={0}>
             <div className={small}>
+              {index(1)}
               <span className={iconBox}><Lines /></span>
               <h3 className="mt-4 text-[21px] font-bold">{t("landing.f2Title")}</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-[#4A4766]">{t("landing.f2Body")}</p>
@@ -297,6 +398,7 @@ function Features() {
 
           <Reveal delay={0.1}>
             <div className={small}>
+              {index(2)}
               <span className={iconBox}><DocCheck /></span>
               <h3 className="mt-4 text-[21px] font-bold">{t("landing.f3Title")}</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-[#4A4766]">{t("landing.f3Body")}</p>
@@ -319,6 +421,7 @@ function Features() {
 
           <Reveal delay={0.2}>
             <div className={small}>
+              {index(3)}
               <span className={iconBox}><Clock /></span>
               <h3 className="mt-4 text-[21px] font-bold">{t("landing.f4Title")}</h3>
               <p className="mt-2 text-[15px] leading-relaxed text-[#4A4766]">{t("landing.f4Body")}</p>
@@ -327,7 +430,7 @@ function Features() {
                   initial={{ width: "8%" }}
                   whileInView={{ width: "64%" }}
                   viewport={{ once: true }}
-                  transition={{ duration: 1.4, ease: [0.2, 0.7, 0.2, 1], delay: 0.3 }}
+                  transition={{ duration: 1.4, ease, delay: 0.3 }}
                   className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600"
                 />
               </div>
@@ -340,6 +443,126 @@ function Features() {
   );
 }
 
+/** Tabs on the left, a photo card on the right. Auto-advances until the visitor picks a tab. */
+function Segments() {
+  const { t } = useTranslation();
+  const segs = t("landing.segments", { returnObjects: true }) as Segment[];
+  const [active, setActive] = useState(0);
+  const [auto, setAuto] = useState(true);
+  const card = useRef<HTMLDivElement>(null);
+  const inView = useInView(card, { margin: "-120px" });
+  const { scrollYProgress } = useScroll({ target: card, offset: ["start end", "end start"] });
+  const photoY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
+
+  useEffect(() => {
+    if (!auto || !inView) return;
+    const id = window.setTimeout(() => setActive((i) => (i + 1) % segs.length), 6000);
+    return () => window.clearTimeout(id);
+  }, [active, auto, inView, segs.length]);
+
+  const seg = segs[active];
+  const photo = PHOTOS[seg.key];
+
+  return (
+    <section className="px-4 pb-20">
+      <div className="mx-auto max-w-[1120px]">
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
+          <div className="max-w-[620px]">
+            <Eyebrow>{t("landing.eyebrowSegments")}</Eyebrow>
+            <h2 className="mt-4 text-[clamp(30px,4.2vw,48px)] font-bold leading-[1.12] tracking-[-0.03em]">
+              {t("landing.segTitlePre")}
+              <Mark>{t("landing.segTitleMark")}</Mark>
+              {t("landing.segTitlePost")}
+            </h2>
+          </div>
+          <p className="max-w-[340px] text-[15px] leading-relaxed text-[#4A4766]">{t("landing.segSub")}</p>
+        </Reveal>
+
+        <Reveal className="mt-10 grid gap-4 lg:grid-cols-[280px_1fr]">
+          <div role="tablist" aria-orientation="vertical" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0">
+            {segs.map((s, i) => {
+              const on = i === active;
+              return (
+                <button
+                  key={s.key}
+                  type="button"
+                  role="tab"
+                  id={`seg-tab-${s.key}`}
+                  aria-selected={on}
+                  aria-controls="seg-panel"
+                  onClick={() => {
+                    setActive(i);
+                    setAuto(false);
+                  }}
+                  className={cx(
+                    "relative flex min-h-[56px] flex-none items-center justify-between gap-3 overflow-hidden rounded-2xl border px-4 text-left text-[15px] font-semibold transition-colors lg:flex-auto",
+                    on ? "border-transparent text-white" : "border-line bg-white text-ink-soft hover:border-brand-200 hover:text-ink",
+                  )}
+                >
+                  {on && <motion.span layoutId="seg-pill" className="absolute inset-0 bg-gradient-to-b from-brand-500 to-brand-700" transition={{ type: "spring", stiffness: 420, damping: 36 }} />}
+                  <span className="relative whitespace-nowrap">{s.tab}</span>
+                  <span className={cx("relative font-mono text-xs", on ? "text-white/70" : "text-[#B9B4D6]")}>/0{i + 1}</span>
+                  {on && auto && inView && (
+                    <motion.span key={active} aria-hidden initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 6, ease: "linear" }} className="absolute inset-x-0 bottom-0 h-[3px] origin-left bg-white/60" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <div ref={card} id="seg-panel" role="tabpanel" aria-labelledby={`seg-tab-${seg.key}`} className="card grid overflow-hidden shadow-card md:grid-cols-[1.05fr_1fr]">
+            <div className="relative min-h-[260px] overflow-hidden bg-brand-100 md:min-h-[440px]">
+              <AnimatePresence initial={false}>
+                <motion.img
+                  key={seg.key}
+                  src={photo.src}
+                  alt={seg.alt}
+                  loading="lazy"
+                  style={{ y: photoY, objectPosition: photo.pos }}
+                  initial={{ opacity: 0, scale: 1.12 }}
+                  animate={{ opacity: 1, scale: 1.04 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.9, ease }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </AnimatePresence>
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
+              <span className="absolute bottom-3 left-4 text-[11px] text-white/80">{t("landing.photoBy", { name: seg.credit })}</span>
+            </div>
+            <div className="flex flex-col p-7">
+              <AnimatePresence mode="wait">
+                <motion.div key={seg.key} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.35, ease }} className="flex flex-1 flex-col">
+                  <span className="eyebrow">{seg.tab}</span>
+                  <h3 className="mt-2 text-[28px] font-bold tracking-[-0.02em]">{seg.bundle}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-[#4A4766]">{seg.body}</p>
+                  <ul className="mt-5 flex flex-col gap-2.5 text-[14px]">
+                    {seg.items.map((it, i) => (
+                      <motion.li key={it} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 + i * 0.06 }} className="flex items-center gap-2.5">
+                        <span className="grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600"><Check size={14} strokeWidth={2.6} /></span>
+                        {it}
+                      </motion.li>
+                    ))}
+                  </ul>
+                  {seg.price ? (
+                    <p className="mt-5 rounded-xl bg-ok-bg px-3 py-2 text-[13px] font-medium text-ok-text">{seg.price}</p>
+                  ) : (
+                    <p className="mt-5 text-xs text-ink-muted">{t("landing.segNote")}</p>
+                  )}
+                  <div className="mt-auto pt-6">
+                    <Link to="/advisor" className="btn-dark">
+                      {t("landing.segCta")} <ArrowRight size={16} />
+                    </Link>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function Stats() {
   const { t } = useTranslation();
   const stats = t("landing.stats", { returnObjects: true }) as Stat[];
@@ -347,7 +570,10 @@ function Stats() {
     <section className="px-4 pb-20 pt-4">
       <Reveal className="card mx-auto max-w-[1120px] px-7 py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="max-w-[560px] text-[clamp(26px,3.4vw,38px)] font-bold leading-tight tracking-[-0.03em]">{t("landing.statsTitle")}</h2>
+          <div>
+            <Eyebrow>{t("landing.eyebrowStats")}</Eyebrow>
+            <h2 className="mt-3 max-w-[560px] text-[clamp(26px,3.4vw,38px)] font-bold leading-tight tracking-[-0.03em]">{t("landing.statsTitle")}</h2>
+          </div>
           <p className="text-sm text-ink-muted">{t("landing.statsSub")}</p>
         </div>
         <div className="mt-8 grid gap-px overflow-hidden rounded-[20px] bg-line sm:grid-cols-2 lg:grid-cols-4">
@@ -375,23 +601,20 @@ function How() {
     <section id="how" className="scroll-mt-24 px-4 pb-20">
       <div className="mx-auto max-w-[1120px]">
         <Reveal>
-          <h2 className="text-center text-[clamp(30px,4.2vw,48px)] font-bold tracking-[-0.03em]">{t("landing.howTitle")}</h2>
+          <Eyebrow>{t("landing.eyebrowHow")}</Eyebrow>
+          <h2 className="mt-4 text-[clamp(30px,4.2vw,48px)] font-bold tracking-[-0.03em]">{t("landing.howTitle")}</h2>
         </Reveal>
-        <div ref={ref} className="relative mt-12">
-          <div aria-hidden className="absolute left-0 right-0 top-[22px] hidden h-[3px] rounded-full bg-brand-100 lg:block">
-            <motion.div style={{ width }} className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600" />
+        <div ref={ref} className="relative mt-10">
+          <div aria-hidden className="h-px bg-line">
+            <motion.div style={{ width }} className="h-[2px] -translate-y-[0.5px] rounded-full bg-gradient-to-r from-brand-400 to-brand-600" />
           </div>
-          <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="grid gap-x-6 gap-y-10 pt-10 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s, i) => (
               <Reveal key={s.t} delay={i * 0.12}>
-                <li className="h-full list-none">
-                  <span className="relative z-10 grid h-11 w-11 place-items-center rounded-full border-4 border-canvas bg-brand-600 font-display text-sm font-extrabold text-white">
-                    {i + 1}
-                  </span>
-                  <div className="mt-4 rounded-[22px] border border-line bg-gradient-to-b from-white to-[#F7F4FF] p-6">
-                    <h3 className="text-[19px] font-bold">{s.t}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[#4A4766]">{s.d}</p>
-                  </div>
+                <li className="list-none">
+                  <span className="text-outline block font-display text-[64px] font-extrabold leading-none tracking-[-0.04em]">0{i + 1}</span>
+                  <h3 className="mt-5 text-[19px] font-bold">{s.t}</h3>
+                  <p className="mt-1.5 max-w-[240px] text-sm leading-relaxed text-[#4A4766]">{s.d}</p>
                 </li>
               </Reveal>
             ))}
@@ -405,42 +628,56 @@ function How() {
 function Cta() {
   const { t } = useTranslation();
   return (
-    <section className="px-4 pb-10">
+    <section className="px-4 pb-16">
       <Reveal className="relative mx-auto max-w-[1120px] overflow-hidden rounded-[32px] px-7 py-16 text-center text-white [background:radial-gradient(800px_400px_at_50%_0%,#3B2A8F_0%,#16132D_70%)]">
         <div aria-hidden className="dots-soft absolute inset-0 opacity-70" />
+        <span aria-hidden className="text-outline pointer-events-none absolute inset-x-0 -bottom-10 select-none whitespace-nowrap font-display text-[clamp(90px,16vw,200px)] font-extrabold leading-none tracking-[-0.05em] opacity-30 [--stroke:#8B6CFF]">
+          SAATHI
+        </span>
         <h2 className="relative text-[clamp(30px,4.4vw,52px)] font-bold leading-[1.08] tracking-[-0.03em]">{t("landing.ctaTitle")}</h2>
         <p className="relative mx-auto mt-3.5 max-w-[520px] leading-relaxed text-[#CFC8F0]">{t("landing.ctaSub")}</p>
         <Link to="/advisor" className="btn-primary relative mt-7 min-h-[52px] px-6">
           {t("landing.ctaBtn")} <ArrowRight size={18} />
         </Link>
       </Reveal>
-      <footer className="mx-auto mt-7 flex max-w-[1120px] flex-wrap justify-between gap-3 text-[13px] text-ink-muted">
-        <span>
-          {t("brand")} {t("by")}
-        </span>
-        <span className="flex gap-5">
-          <Link to="/privacy" className="hover:text-brand-700">{t("landing.privacy")}</Link>
-          <Link to="/track" className="hover:text-brand-700">{t("nav.track")}</Link>
-        </span>
-      </footer>
     </section>
   );
 }
 
-function Strip() {
+function Footer() {
   const { t } = useTranslation();
-  const items = t("landing.stripItems", { returnObjects: true }) as string[];
+  const col = "flex flex-col gap-2.5 text-sm text-[#4A4766]";
+  const link = "transition hover:text-brand-700";
   return (
-    <section className="px-4 pt-14 text-center">
-      <p className="text-sm font-medium text-ink-muted">{t("landing.strip")}</p>
-      <div className="mx-auto mt-5 flex max-w-[980px] flex-wrap justify-center gap-x-9 gap-y-3 font-display text-base font-bold text-[#8A86A6]">
-        {items.map((s, i) => (
-          <Reveal key={s} y={10} delay={i * 0.06}>
-            <span>{s}</span>
-          </Reveal>
-        ))}
+    <footer className="relative overflow-hidden px-4 pt-4">
+      <div className="mx-auto flex max-w-[1120px] flex-wrap justify-between gap-10 border-t border-line pt-10">
+        <div className="max-w-[300px]">
+          <Logo />
+          <p className="mt-3 text-sm leading-relaxed text-ink-muted">{t("landing.footerTag")}</p>
+        </div>
+        <div className="flex gap-16">
+          <div className={col}>
+            <span className="eyebrow mb-1">{t("landing.footerCustomers")}</span>
+            <Link to="/advisor" className={link}>{t("landing.footerStart")}</Link>
+            <Link to="/track" className={link}>{t("landing.footerTrack")}</Link>
+            <Link to="/privacy" className={link}>{t("landing.footerPrivacy")}</Link>
+          </div>
+          <div className={col}>
+            <span className="eyebrow mb-1">{t("landing.footerTeam")}</span>
+            <Link to="/backoffice" className={link}>{t("landing.footerBo")}</Link>
+          </div>
+        </div>
       </div>
-    </section>
+      <div className="mx-auto mt-10 flex max-w-[1120px] flex-wrap justify-between gap-2 text-xs text-ink-muted">
+        <span>{t("brand")} {t("by")}</span>
+        <span>{t("landing.footerData")}</span>
+      </div>
+      <Reveal y={40} className="mx-auto mt-6 max-w-[1240px] select-none text-center" aria-hidden>
+        <span className="text-outline block translate-y-[18%] whitespace-nowrap font-display text-[clamp(80px,21vw,300px)] font-extrabold leading-[.8] tracking-[-0.06em] [--stroke:#D9D0FF]">
+          SAATHI
+        </span>
+      </Reveal>
+    </footer>
   );
 }
 
@@ -449,11 +686,13 @@ export default function Landing() {
     <div className="overflow-x-clip">
       <Nav />
       <Hero />
-      <Strip />
+      <Marquee />
       <Features />
+      <Segments />
       <Stats />
       <How />
       <Cta />
+      <Footer />
     </div>
   );
 }

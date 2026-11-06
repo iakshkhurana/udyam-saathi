@@ -24,23 +24,12 @@
   "landing": {
     "badge": "Accel Business for small businesses",
     "title1": "Get your business online",
-    "title2": "in one sitting",
     "sub": "Tell Saathi about your shop or office. Get the right internet, phone and cloud bundle at one monthly price, finish KYC on your phone and follow your install live. No field visit.",
     "startEn": "Start in English",
     "startHi": "हिंदी में शुरू करें",
     "chatIn": "Saathi also chats in",
-    "strip": "Everything a small business needs, on one bill",
-    "stripItems": [
-      "Fibre & 5G",
-      "Mobile lines",
-      "Cloud POS",
-      "WhatsApp Business",
-      "Cloud CCTV",
-      "Website"
-    ],
     "oldTag": "The old way is slow",
     "oldTitle1": "Paper quotes and field visits.",
-    "oldTitle2": "Replaced by one chat.",
     "oldSub": "Quotes used to take 3–5 days as PDFs full of product codes. Activation took two weeks and a few calls to find out where things stood.",
     "f1Title": "An advisor that speaks your language",
     "f1Body": "Saathi asks what you do, how many people work with you, how many locations you have and what internet you use today. It only suggests products you're eligible for and tells you why.",
@@ -109,7 +98,110 @@
     "previewInstall": "Install Tue 21 Jul",
     "previewActivation": "Activation",
     "previewWa": "WhatsApp update",
-    "previewWaText": "Your technician Ravi will visit on Tue 21 Jul between 10am and 1pm."
+    "previewWaText": "Your technician Ravi will visit on Tue 21 Jul between 10am and 1pm.",
+    "title2Pre": "in one ",
+    "title2Mark": "sitting",
+    "cursorSaathi": "Saathi",
+    "cursorYou": "You",
+    "marqueeTitle": "Saathi already knows how to set up",
+    "marquee": [
+      "Kirana stores",
+      "Salons",
+      "Pharmacies",
+      "Dental clinics",
+      "CA firms",
+      "Coaching centres",
+      "Bakeries",
+      "Restaurant chains",
+      "Retail chains",
+      "Textile units",
+      "Printing presses",
+      "Auto-parts units"
+    ],
+    "oldTitle2Pre": "Replaced by ",
+    "oldTitle2Mark": "one chat.",
+    "eyebrowFeatures": "What you get",
+    "eyebrowSegments": "Who it's for",
+    "eyebrowStats": "The numbers",
+    "eyebrowHow": "How it works",
+    "segTitlePre": "One advisor for ",
+    "segTitleMark": "every kind",
+    "segTitlePost": " of business",
+    "segSub": "Pick what sounds like you. Saathi starts from the right bundle and adjusts it to your staff, sites, city and GSTIN.",
+    "segNote": "Final items depend on your staff, sites, city and GSTIN.",
+    "segCta": "Try it with your numbers",
+    "segments": [
+      {
+        "key": "micro",
+        "tab": "Shops & kiranas",
+        "bundle": "Dukaan Digital",
+        "body": "For a counter, a few people and UPI on every sale. Works without a GSTIN too.",
+        "items": [
+          "Biz Fibre 100",
+          "Business mobile lines",
+          "Cloud POS & billing",
+          "Website + domain"
+        ],
+        "price": "From ₹2,495/month for a 2-person shop",
+        "alt": "A neighbourhood grocery shop in Kamshet, Maharashtra, with the shopkeeper at the counter",
+        "credit": "Zoshua Colah"
+      },
+      {
+        "key": "prof",
+        "tab": "Offices & clinics",
+        "bundle": "Office Pro",
+        "body": "For clinics, CA firms and agencies that run on email, calls and files.",
+        "items": [
+          "Biz Fibre 300",
+          "Backup 4G/5G failover",
+          "Email & office suite for each person",
+          "Endpoint security",
+          "Cloud backup 1 TB"
+        ],
+        "price": "",
+        "alt": "A woman working on a laptop at an office desk",
+        "credit": "Zulfugar Karimov"
+      },
+      {
+        "key": "multi",
+        "tab": "Chains & branches",
+        "bundle": "One Bill Multi-site",
+        "body": "The same setup at every branch, one bill, managed from one place.",
+        "items": [
+          "Fibre + failover at each site",
+          "Cloud POS per counter",
+          "Cloud CCTV",
+          "Managed SD-WAN from 3 sites"
+        ],
+        "price": "",
+        "alt": "A café counter with bar stools in Koramangala, Bengaluru",
+        "credit": "Kamal Kant"
+      },
+      {
+        "key": "mfg",
+        "tab": "Factories & units",
+        "bundle": "Factory Connect",
+        "body": "Dedicated internet with an SLA for the shop floor, plus security and machine monitoring.",
+        "items": [
+          "Internet Leased Line 20 (99.5% SLA)",
+          "Managed firewall",
+          "Machine monitoring IoT",
+          "Email for the office team"
+        ],
+        "price": "",
+        "alt": "A woman at a sewing machine in an Indian textile factory",
+        "credit": "EqualStock"
+      }
+    ],
+    "photoBy": "Photo: {{name}} / Unsplash",
+    "footerTag": "Internet, phone and cloud for small businesses. One chat, one bill.",
+    "footerCustomers": "Customers",
+    "footerTeam": "Team",
+    "footerStart": "Start a chat",
+    "footerTrack": "Track an order",
+    "footerPrivacy": "Privacy centre",
+    "footerBo": "Back office",
+    "footerData": "All business data in this prototype is synthetic."
   },
   "advisor": {
     "title": "Saathi",

@@ -40,6 +40,7 @@ export default {
         beam: { "0%,100%": { opacity: ".55" }, "50%": { opacity: ".9" } },
         dot: { "0%,80%,100%": { opacity: ".25" }, "40%": { opacity: "1" } },
         scan: { "0%": { top: "8%" }, "100%": { top: "84%" } },
+        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
         pulsering: {
           "0%": { boxShadow: "0 0 0 0 rgba(90,59,240,.45)" },
           "100%": { boxShadow: "0 0 0 12px rgba(90,59,240,0)" },
@@ -51,6 +52,7 @@ export default {
         dot: "dot 1.2s infinite",
         scan: "scan 1.6s ease-in-out infinite alternate",
         pulsering: "pulsering 1.6s ease-out infinite",
+        marquee: "marquee 38s linear infinite",
       },
     },
   },
