@@ -1,5 +1,5 @@
 # lefts.md – Status of the Udyam Saathi build
-_Last updated: 2026-11-06 · Current phase: 8_
+_Last updated: 2026-11-06 · Current phase: 9_
 
 ## ✅ Done
 - Phase 0: repo structure, `.gitignore`, `.env.example`, `lefts.md`; data moved to `data/raw/YTL_TrackA_Udyam_Digital_Data/`
@@ -11,6 +11,7 @@ _Last updated: 2026-11-06 · Current phase: 8_
 - Phase 6: `services/tracker.py` – stages QUOTE_ACCEPTED → CONSENT_GIVEN → KYC_VERIFIED/KYC_REVIEW → INSTALL_SCHEDULED → INSTALLED → ACTIVATED (+ DELAYED, CANCELLED), install date = KYC date + max install days skipping Sundays, activation +1 day, EN/HI WhatsApp-style notifications for every event, fictional technician card, proactive delay (reason + new date + apology + automatic ₹100 credit), NPS after activation, referral → back-office lead; demo endpoints `/orders/{id}/advance` and `/delay`
 - Phase 7: frontend is being built by a parallel Claude session (`airtel-50`) assigned by the user to `frontend/`; this session does not edit `frontend/`. API contract sent to that session.
 - Phase 8: `routers/backoffice.py` (PIN via `X-Backoffice-Pin`; advisor leads not closed incl. abandoned >30 min and referrals, historical dropped leads with propensity score + recommended action and filters, KYC review queue with approve/reject, audited full-ID reviewer view, rules audit), `scripts/train_propensity.py` (ROC-AUC 0.68, model in `backend/models/propensity.joblib`, scores stored on leads), `scripts/analyze_leads.py` → `docs/insights.md` + `docs/charts/*.png` (all spec figures reproduced exactly); back-office tests added – full suite 64 passed, 1 skipped
+- Phase 9: `routers/whatsapp.py` – Twilio-format webhook `POST /api/webhooks/whatsapp` (form `From`/`Body`), same advisor engine, numbered options instead of chips, "See quote" replies with the quote link, deterministic session per sender (hashed number, never stored raw), optional `X-Twilio-Signature` validation when `TWILIO_AUTH_TOKEN` is set, TwiML reply; `tests/test_whatsapp.py` (fake Twilio payloads) 2/2. Voice input (Web Speech API) belongs to the frontend session.
 
 ## ⏳ Left for humans (do these yourself)
 - [ ] (filled in as the build progresses)

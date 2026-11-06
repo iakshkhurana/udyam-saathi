@@ -10,7 +10,7 @@ from .config import BACKEND_DIR, get_settings
 from .db import Base, SessionLocal, engine
 from .limiter import limiter
 from .models import Product
-from .routers import advisor, backoffice, consent, kyc, orders, privacy, quote, registry
+from .routers import advisor, backoffice, consent, kyc, orders, privacy, quote, registry, whatsapp
 from .services.data_loader import load
 from .utils.masking import configure_logging
 
@@ -41,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for r in (registry, advisor, quote, consent, kyc, orders, privacy, backoffice):
+for r in (registry, advisor, quote, consent, kyc, orders, privacy, backoffice, whatsapp):
     app.include_router(r.router, prefix="/api")
 
 

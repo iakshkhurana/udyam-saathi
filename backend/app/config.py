@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     backoffice_pin: str = "2026"
     frontend_origin: str = "http://localhost:5173"
     tesseract_cmd: str = ""
+    twilio_auth_token: str = ""
     data_dir: str = ""
     database_url: str = f"sqlite:///{(BACKEND_DIR / 'app.db').as_posix()}"
     storage_dir: str = str(BACKEND_DIR / "storage")
