@@ -1,0 +1,13 @@
+.env
+*.db
+storage/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+dist/
+.pytest_cache/
+backend/logs/
+e2e/test-results/
+e2e/playwright-report/
+__MACOSX/
