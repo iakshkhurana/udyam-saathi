@@ -1,11 +1,12 @@
 # lefts.md – Status of the Udyam Saathi build
-_Last updated: 2026-11-06 · Current phase: 3_
+_Last updated: 2026-11-06 · Current phase: 4_
 
 ## ✅ Done
 - Phase 0: repo structure, `.gitignore`, `.env.example`, `lefts.md`; data moved to `data/raw/YTL_TrackA_Udyam_Digital_Data/`
 - Phase 1: `backend/app/{config,db,models,schemas}.py`, `scripts/load_data.py` (→ `app/services/data_loader.py`, API self-loads an empty DB), `utils/validators.py` (positional OCR normalisation, never repairs checksum), `utils/masking.py` (+ masking log formatter), `/api/gstin`, `/api/udyam`, `/api/products`, rate-limited lookups; `tests/test_validators.py` 12/12 pass
 - Phase 2: `services/rules_engine.py` (eligibility, segment bases, needs→products, dependencies, segment default bundles, quantities, pricing, savings line, EN/HI "why" text, final validation that raises), `services/audit.py` + `scripts/audit_sold_bundles.py` → `docs/rules_audit.md` (+ `.json`); `tests/test_rules_engine.py` incl. 500-profile property test – all pass
 - Phase 3: `services/advisor.py` (slot state machine, free-text parsing for numbers/cities/business types/needs/products/GSTIN, EN/HI guided mode with chips, clarifying questions, refusal of "ignore the rules", callback → back-office lead, LLM mode with tools `lookup_city_tier`/`map_business_type`/`lookup_gstin`/`recommend_bundle`/`save_profile_slot`/`request_callback`, automatic fallback to guided mode if the LLM call fails), `services/llm_client.py` (provider-agnostic `LLMClient`, Anthropic implementation), `services/propensity.py`, `routers/advisor.py`; `tests/test_advisor_scenarios.py` 15/15 → `docs/advisor_test_results.md`
+- Phase 4: `services/quote.py` (quote from session/profile, toggles + quantities re-validated by the rules engine, base-off removes dependents with a warning, WhatsApp share text/link), `routers/quote.py` (`POST/GET/PATCH /quotes`, `/accept` → order), `routers/consent.py` (DPDP consent record: purposes, notice version, language, hashed IP; `require_consent` gate for KYC), `services/storage.py` (Fernet-encrypted document store, audit log, retention job), `routers/privacy.py`, `services/tracker.py` + `routers/orders.py` (order creation and stage events)
 
 ## ⏳ Left for humans (do these yourself)
 - [ ] (filled in as the build progresses)
@@ -32,6 +33,10 @@ _Last updated: 2026-11-06 · Current phase: 3_
 - In LLM mode the backend overrides `gstin_status` and `city_tier` with its own lookups before calling the rules engine, so the model cannot fake eligibility.
 - LLM calls use `claude-sonnet-5-5` (spec default, `LLM_MODEL` overrides) with `effort: low` and the server-side refusal fallback (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`).
 - Advisor leads are scored with `lead_source = "Website form"`, `has_udyam = N`, turnover `< 40 lakh` (unknown in chat).
+
+- Payment is mocked: "Pay first month later at activation" – no payment gateway.
+- Withdrawing KYC consent before activation cancels the order and deletes documents; after activation it only deletes documents (the service keeps running).
+- The quote is a "print-to-PDF" view (browser print) rather than a server-generated PDF.
 
 ## ❌ Known issues / failing tests
 - none yet
