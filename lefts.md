@@ -1,5 +1,5 @@
 # lefts.md – Status of the Udyam Saathi build
-_Last updated: 2026-11-06 · Current phase: 9_
+_Last updated: 2026-11-06 23:59 · Current phase: 11 (complete)_
 
 ## ✅ Done
 - Phase 0: repo structure, `.gitignore`, `.env.example`, `lefts.md`; data moved to `data/raw/YTL_TrackA_Udyam_Digital_Data/`
@@ -11,10 +11,23 @@ _Last updated: 2026-11-06 · Current phase: 9_
 - Phase 6: `services/tracker.py` – stages QUOTE_ACCEPTED → CONSENT_GIVEN → KYC_VERIFIED/KYC_REVIEW → INSTALL_SCHEDULED → INSTALLED → ACTIVATED (+ DELAYED, CANCELLED), install date = KYC date + max install days skipping Sundays, activation +1 day, EN/HI WhatsApp-style notifications for every event, fictional technician card, proactive delay (reason + new date + apology + automatic ₹100 credit), NPS after activation, referral → back-office lead; demo endpoints `/orders/{id}/advance` and `/delay`
 - Phase 7 (built by the parallel session `airtel-50`, commit 584f0df): `frontend/` – React 18 + Vite 5 + TS + Tailwind 3 + Framer Motion, react-router, react-i18next (EN/HI on every screen; advisor chat in 10 languages). Screens: Landing (scroll-driven tilted hero window, count-up stats, step progress line), Advisor (chips incl. multi-select needs, Web Speech mic, typing indicator, AI/Guided badge, bundle card, abandon beacon), Quote (animated total, toggles/steppers re-validated by PATCH, warnings, WhatsApp share, print-to-PDF), Consent (DPDP notice), Smart KYC (GSTIN/Udyam lookup card, 4 upload tiles with per-check fix-it text, K01–K12 sample loader, DigiLocker mock, OTP sheet), Tracker (15 s auto-refresh, delay banner + credit, technician card, WhatsApp-style updates, NPS + referral, `?demo=1` controls, copy link), Privacy centre, Back office (dark theme, PIN, 4 tabs). Mobile-first 430px app frame; landing and back office are full-width responsive.
 - Phase 8: `routers/backoffice.py` (PIN via `X-Backoffice-Pin`; advisor leads not closed incl. abandoned >30 min and referrals, historical dropped leads with propensity score + recommended action and filters, KYC review queue with approve/reject, audited full-ID reviewer view, rules audit), `scripts/train_propensity.py` (ROC-AUC 0.68, model in `backend/models/propensity.joblib`, scores stored on leads), `scripts/analyze_leads.py` → `docs/insights.md` + `docs/charts/*.png` (all spec figures reproduced exactly); back-office tests added – full suite 64 passed, 1 skipped
-- Phase 9: `routers/whatsapp.py` – Twilio-format webhook `POST /api/webhooks/whatsapp` (form `From`/`Body`), same advisor engine, numbered options instead of chips, "See quote" replies with the quote link, deterministic session per sender (hashed number, never stored raw), optional `X-Twilio-Signature` validation when `TWILIO_AUTH_TOKEN` is set, TwiML reply; `tests/test_whatsapp.py` (fake Twilio payloads) 2/2. Voice input (Web Speech API) belongs to the frontend session.
+- Phase 9: `routers/whatsapp.py` – Twilio-format webhook `POST /api/webhooks/whatsapp` (form `From`/`Body`), same advisor engine, numbered options instead of chips, "See quote" replies with the quote link, deterministic session per sender (hashed number, never stored raw), optional `X-Twilio-Signature` validation when `TWILIO_AUTH_TOKEN` is set, TwiML reply; `tests/test_whatsapp.py` (fake Twilio payloads) 2/2. Voice input (Web Speech API, hi-IN/en-IN/ta-IN…) is in the advisor screen (frontend session).
+- Phase 10: `docs/architecture.md` (Mermaid) + `docs/architecture.png` (rendered with `@mermaid-js/mermaid-cli` using the installed Chrome), `docs/privacy_note.md` (1-page DPDP note), `docs/demo_script.md` (3-minute, step by step), `README.md`, `e2e/` (Playwright: `smoke.spec.ts` full guided journey + consent gate + EN/HI toggle on all 8 screens; `screenshots.spec.ts` → `docs/screenshots/01_landing … 10_backoffice.png`, 390×844 @2x)
+- Phase 11: `backend/Dockerfile` (python:3.11-slim + tesseract-ocr, loads data on start), `.dockerignore`, `docker-compose.yml` (backend + frontend via node:20-alpine `vite preview`), `render.yaml` (Render blueprint), `frontend/vercel.json` (frontend session). Final from-scratch run: fresh data load ✓, backend 66 passed / 1 skipped, Playwright 4/4 passed.
 
 ## ⏳ Left for humans (do these yourself)
-- [ ] (filled in as the build progresses)
+- [ ] **Enable AI mode** (optional – the demo works without it). Why: Claude runs the advisor in all 10 languages and cross-checks OCR. Steps: get a key at console.anthropic.com → copy `.env.example` to `.env` in the repo root → set `ANTHROPIC_API_KEY=sk-ant-…` → restart the backend → `/api/health` shows `"mode": "AI"` and the chat shows the "AI mode" badge. Then run `TEST_ANTHROPIC_API_KEY=<key> python -m pytest tests/test_advisor_scenarios.py` for the Tamil test (scenario 6) and try a few judge-style prompts by hand.
+- [ ] **Tesseract on other machines.** Why: Smart KYC reads documents with it (installed here at `C:\Program Files\Tesseract-OCR`). Steps: Ubuntu `sudo apt install tesseract-ocr` · macOS `brew install tesseract` · Windows UB Mannheim installer (default path is auto-detected; otherwise set `TESSERACT_CMD`). The Docker image already includes it.
+- [ ] **Set a real encryption key and PIN.** Why: without `DOC_ENCRYPTION_KEY` a dev key is generated in `backend/storage/.dev_key`. Steps: `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"` → put it in `.env` / Render env; change `BACKOFFICE_PIN` from `2026`.
+- [ ] **Deploy the backend on Render.** Steps: push the repo to GitHub → render.com → New → Blueprint → pick the repo (`render.yaml`) → fill `FRONTEND_ORIGIN` with the Vercel URL (required – otherwise CORS blocks the deployed frontend), `DOC_ENCRYPTION_KEY`, `BACKOFFICE_PIN`, optional `ANTHROPIC_API_KEY` → deploy → open `https://<service>.onrender.com/api/health`. Free instances sleep: open the URL a minute before the demo.
+- [ ] **Deploy the frontend on Vercel.** Steps: vercel.com → Add New Project → import the repo → Root Directory `frontend` (Vite settings come from `vercel.json`) → Settings → Environment Variables: `VITE_API_URL=https://<service>.onrender.com` (no trailing slash, no `/api`) → Deploy → put the Vercel URL into Render's `FRONTEND_ORIGIN` and redeploy the backend.
+- [ ] **Docker check.** Why: the Docker daemon was not running here, so `docker compose up --build` was not executed. Steps: start Docker Desktop → `docker compose up --build` in the repo root → open http://localhost:5173.
+- [ ] **Twilio WhatsApp sandbox.** Steps: twilio.com → Messaging → Try it out → WhatsApp sandbox → join from your phone → "When a message comes in" = `https://<service>.onrender.com/api/webhooks/whatsapp` (POST) → set `TWILIO_AUTH_TOKEN` in Render so signatures are verified → send "hi" to the sandbox number. Quote links use the first `FRONTEND_ORIGIN`.
+- [ ] **Record the 3-minute backup demo video** following `docs/demo_script.md` (mobile view 390×844; each sample applicant takes ~5–10 s of OCR).
+- [ ] **Review `docs/kyc_results.md` against the judges' answer key** when released; update `EXPECTED` in `backend/app/services/kyc/service.py` if it differs.
+- [ ] **Rebrand** name/colours if the team wants ("Udyam Saathi by Accel Business" is used in the UI, README and docs).
+- [ ] **Hand to Member B:** `docs/screenshots/*`, `docs/architecture.png`, `docs/kyc_results.md`, `docs/insights.md`, `docs/charts/*`, `docs/privacy_note.md`, `docs/demo_script.md`, plus the demo link + a QR code (create it after deploying).
+- [ ] **Push to a remote.** No git remote is configured; create one (GitHub) and `git push -u origin main`.
 
 ## ⚠️ Assumptions made
 - Data was at `./YTL_TrackA_Udyam_Digital_Data/`; moved (unchanged) to the spec path `data/raw/YTL_TrackA_Udyam_Digital_Data/`.
@@ -65,10 +78,17 @@ _Last updated: 2026-11-06 · Current phase: 9_
 
 - Visual design is a purple/lavender theme (#5A3BF0) at the user's request instead of the spec's Airtel red `#E40000`. Design mockups: https://claude.ai/artifact/7tWS5opu6frigPgoPf3iHq (private unless shared).
 - The DigiLocker button is a UI-only mock.
+- The landing page uses 4 free photos under the Unsplash License, stored in `frontend/public/images/` and credited on each card: kirana.jpg (Zoshua Colah, Kamshet MH), office.jpg (Zulfugar Karimov), cafe.jpg (Kamal Kant, Bengaluru), factory.jpg (EqualStock). Segment cards list typical bundle items per segment; the only price shown is the verified Dukaan Digital ₹2,495 for a 2-person shop without a GSTIN.
 - Every KYC check carries the document it belongs to (`doc`); only C01 (completeness) is order-level.
 
 ## ❌ Known issues / failing tests
-- none yet
+- No failing tests (backend 66 passed, 1 skipped; Playwright 4/4).
+- `test_06_tamil_llm` is skipped: AI mode needs an API key, so the LLM path (tool loop, refusal fallback, vision cross-check) has not been run against the live API. If an LLM call fails, the advisor falls back to guided mode for that turn.
+- The Docker image and `docker compose` were not built (Docker daemon not running). The image uses Python 3.11; development and tests ran on Python 3.14. 3.11 compatibility was checked statically (no 3.12+ syntax such as PEP 701 f-strings), not by running.
+- OCR takes ~5–10 s per sample applicant on this machine.
+- Guided mode understands chips and common English/Hinglish phrasing; unusual free text may need a chip or an extra turn (AI mode handles open conversation).
+- Propensity ROC-AUC is 0.68 – good for ranking, not precise probabilities.
+- For ~2 minutes at the start of Phase 7 this session and the frontend session both wrote to `frontend/`; the frontend session restored its files. This session's Phase 5–6 commits contain some of its early in-progress frontend files, superseded by its own commits from 584f0df on.
 
 ## 📊 Key results (for the PPT)
 - Rules audit: 48 / 368 sold bundles (13%) break catalogue rules – city tier 24, GSTIN 12, dependency 9, employees 8 (exact match with the expected counts)
@@ -78,8 +98,17 @@ _Last updated: 2026-11-06 · Current phase: 9_
 - Advisor tests: 15/15 pass in guided mode (scenario 6 asserts the English fallback note; the Tamil reply test runs only with `TEST_ANTHROPIC_API_KEY`)
 
 ## ▶️ How to run (short)
-- backend: see README
+- backend: `cd backend && python -m venv .venv && .venv/Scripts/activate && pip install -r requirements.txt && python scripts/load_data.py && uvicorn app.main:app --port 8000`
 - frontend: `cd frontend && npm install && npm run dev` → http://localhost:5173 (needs the backend on :8000)
+- tests: `cd backend && python -m pytest -q` · `cd e2e && npm install && npx playwright test`
+- docs: from `backend/`: `python scripts/audit_sold_bundles.py`, `python scripts/run_kyc_samples.py`, `python scripts/train_propensity.py`, `python scripts/analyze_leads.py`
+- demo shortcuts: sample applicants K01–K12 in the KYC dropdown · OTP `123456` · tracker controls at `/track/<id>?demo=1` · back-office PIN `2026`
 
 ## 🔜 Suggested next steps (finale)
-- pending
+- Turn on AI mode and run the 15 scenarios in Tamil/Kannada/Punjabi by hand; add LLM-mode assertions to the suite.
+- Price within the min–max band (tier/volume/tenure) instead of always the "from" price; GST-inclusive toggle.
+- Real integrations: GSP for GSTIN, Udyam API, DigiLocker pull, licensed Aadhaar e-sign, payment gateway for the first month.
+- Partner co-pilot mode for channel partners/field sales (the costliest channel at ₹24,335 CAC) with lead hand-off.
+- Calibrate propensity cut-offs to call-centre capacity; A/B test the WhatsApp nudge.
+- Send tracker events as real WhatsApp Business templates (the EN/HI text already exists).
+- Postgres + migrations, KMS-managed keys, background OCR worker, VAPT and a DPIA before any pilot.
