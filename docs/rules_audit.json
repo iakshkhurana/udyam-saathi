@@ -1,0 +1,1031 @@
+{
+ "activated": 368,
+ "flagged": 48,
+ "by_type": {
+  "city tier": 24,
+  "GSTIN": 12,
+  "dependency": 9,
+  "employees": 8
+ },
+ "rows": [
+  {
+   "lead_id": "L00086",
+   "business_type": "Physiotherapy clinic",
+   "city": "Bengaluru",
+   "city_tier": 1,
+   "employees": 3,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "29\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZI",
+   "bundle": "P03x1;P07x4;P16x3;P20x3;P17x1;P12x3;P11x1;P09x1;P14x1",
+   "monthly_value": 13190,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00207",
+   "business_type": "Insurance agency",
+   "city": "Kochi",
+   "city_tier": 2,
+   "employees": 21,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "32\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z8",
+   "bundle": "P03x1;P08x3;P16x14;P17x1;P12x2;P11x1;P14x1",
+   "monthly_value": 13410,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00242",
+   "business_type": "Dental clinic",
+   "city": "Surat",
+   "city_tier": 2,
+   "employees": 7,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "24\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZR",
+   "bundle": "P03x1;P07x1;P16x5;P20x7;P17x1",
+   "monthly_value": 6670,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00355",
+   "business_type": "Insurance agency",
+   "city": "Patna",
+   "city_tier": 2,
+   "employees": 12,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P03x1;P07x1;P16x12;P20x8;P11x1",
+   "monthly_value": 7250,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier",
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00674",
+   "business_type": "Law office",
+   "city": "Jaipur",
+   "city_tier": 2,
+   "employees": 9,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "08\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZL",
+   "bundle": "P03x1;P08x2;P16x9;P11x1",
+   "monthly_value": 7090,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00751",
+   "business_type": "Insurance agency",
+   "city": "Indore",
+   "city_tier": 2,
+   "employees": 18,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "23\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZT",
+   "bundle": "P03x1;P07x3;P16x5;P12x3",
+   "monthly_value": 9430,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00764",
+   "business_type": "Real estate agency",
+   "city": "Bengaluru",
+   "city_tier": 1,
+   "employees": 14,
+   "sites": 2,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P03x1;P08x2;P16x10;P12x4",
+   "monthly_value": 12250,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "gstin"
+     ]
+    },
+    {
+     "product_id": "P12",
+     "product": "Cloud Telephony / SIP",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00974",
+   "business_type": "Boutique",
+   "city": "Bengaluru",
+   "city_tier": 1,
+   "employees": 6,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x2;P23x1;P15x1",
+   "monthly_value": 3450,
+   "violations": [
+    {
+     "product_id": "P15",
+     "product": "WhatsApp Business API Starter",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L00983",
+   "business_type": "Law office",
+   "city": "Chennai",
+   "city_tier": 1,
+   "employees": 3,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "33\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZJ",
+   "bundle": "P03x1;P08x3;P16x3;P20x3;P11x1",
+   "monthly_value": 7500,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01045",
+   "business_type": "Travel agency",
+   "city": "Chennai",
+   "city_tier": 1,
+   "employees": 3,
+   "sites": 2,
+   "has_gstin": "Y",
+   "gstin": "33\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZE",
+   "bundle": "P03x1;P07x3;P16x3;P20x3;P17x1",
+   "monthly_value": 6900,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01079",
+   "business_type": "Physiotherapy clinic",
+   "city": "Chennai",
+   "city_tier": 1,
+   "employees": 4,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "33\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZA",
+   "bundle": "P03x1;P08x4;P16x4",
+   "monthly_value": 7180,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01089",
+   "business_type": "Printing press",
+   "city": "Indore",
+   "city_tier": 2,
+   "employees": 90,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "23\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z9",
+   "bundle": "P05x1;P08x2;P16x11;P23x6;P11x1",
+   "monthly_value": 13710,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01104",
+   "business_type": "Plastic moulding unit",
+   "city": "Surat",
+   "city_tier": 2,
+   "employees": 99,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "24\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZQ",
+   "bundle": "P06x1;P08x3;P16x10;P24x12;P23x5;P20x10;P11x1",
+   "monthly_value": 42750,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01138",
+   "business_type": "Physiotherapy clinic",
+   "city": "Nashik",
+   "city_tier": 2,
+   "employees": 24,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "27\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z0",
+   "bundle": "P03x1;P07x1;P16x15;P11x1",
+   "monthly_value": 7130,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01199",
+   "business_type": "Plastic moulding unit",
+   "city": "Mumbai",
+   "city_tier": 1,
+   "employees": 13,
+   "sites": 2,
+   "has_gstin": "Y",
+   "gstin": "27\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZG",
+   "bundle": "P06x1;P08x3;P16x10;P24x9;P20x4",
+   "monthly_value": 37110,
+   "violations": [
+    {
+     "product_id": "P06",
+     "product": "Internet Leased Line 100",
+     "rules": [
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01464",
+   "business_type": "Dental clinic",
+   "city": "Jaipur",
+   "city_tier": 2,
+   "employees": 24,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "08\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z3",
+   "bundle": "P03x1;P07x1;P16x5;P20x9;P11x1;P09x1",
+   "monthly_value": 7460,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01511",
+   "business_type": "Packaging unit",
+   "city": "Lucknow",
+   "city_tier": 2,
+   "employees": 32,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "09\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z8",
+   "bundle": "P05x1;P08x6;P16x12;P20x5;P11x1",
+   "monthly_value": 18280,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01817",
+   "business_type": "Coaching centre",
+   "city": "Lucknow",
+   "city_tier": 2,
+   "employees": 4,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "09\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z0",
+   "bundle": "P03x1;P07x3;P16x4;P12x2",
+   "monthly_value": 7990,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier",
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01828",
+   "business_type": "Food processing unit",
+   "city": "Coimbatore",
+   "city_tier": 2,
+   "employees": 110,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "33\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z9",
+   "bundle": "P03x1;P08x4;P16x6",
+   "monthly_value": 7950,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L01851",
+   "business_type": "Packaging unit",
+   "city": "Nashik",
+   "city_tier": 2,
+   "employees": 119,
+   "sites": 2,
+   "has_gstin": "Y",
+   "gstin": "27\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZA",
+   "bundle": "P03x1;P08x3;P16x8",
+   "monthly_value": 6890,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L02014",
+   "business_type": "Architecture studio",
+   "city": "Visakhapatnam",
+   "city_tier": 2,
+   "employees": 4,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "37\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZV",
+   "bundle": "P03x1;P08x3;P16x4;P20x4;P17x1;P12x3;P14x1",
+   "monthly_value": 13470,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier",
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L02358",
+   "business_type": "Sweet shop",
+   "city": "Kolkata",
+   "city_tier": 1,
+   "employees": 3,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x2;P19x1;P15x1",
+   "monthly_value": 3750,
+   "violations": [
+    {
+     "product_id": "P15",
+     "product": "WhatsApp Business API Starter",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L02588",
+   "business_type": "Auto-parts unit",
+   "city": "Delhi",
+   "city_tier": 1,
+   "employees": 75,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "07\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZF",
+   "bundle": "P05x1;P08x3;P16x11;P20x12;P11x1",
+   "monthly_value": 14250,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L02859",
+   "business_type": "Printing press",
+   "city": "Jaipur",
+   "city_tier": 2,
+   "employees": 13,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "08\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z6",
+   "bundle": "P03x1;P08x2;P16x13;P21x1;P23x4",
+   "monthly_value": 10950,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L02870",
+   "business_type": "Physiotherapy clinic",
+   "city": "Visakhapatnam",
+   "city_tier": 2,
+   "employees": 16,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "37\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZN",
+   "bundle": "P03x1;P08x4;P16x11;P20x4",
+   "monthly_value": 9190,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L02943",
+   "business_type": "Food processing unit",
+   "city": "Hyderabad",
+   "city_tier": 1,
+   "employees": 64,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "36\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZG",
+   "bundle": "P05x1;P08x5;P16x18;P21x1;P20x6;P11x1",
+   "monthly_value": 21250,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03010",
+   "business_type": "Furniture workshop",
+   "city": "Delhi",
+   "city_tier": 1,
+   "employees": 46,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "07\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZX",
+   "bundle": "P06x1;P08x5;P16x11;P20x6;P11x1;P25x6",
+   "monthly_value": 40950,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03058",
+   "business_type": "Electronics retail chain",
+   "city": "Mumbai",
+   "city_tier": 1,
+   "employees": 43,
+   "sites": 8,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P02x8;P09x8;P08x6;P19x8;P10x8;P23x16;P22x8",
+   "monthly_value": 65520,
+   "violations": [
+    {
+     "product_id": "P10",
+     "product": "Managed SD-WAN",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03221",
+   "business_type": "Bakery",
+   "city": "Ahmedabad",
+   "city_tier": 1,
+   "employees": 3,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x1;P15x1",
+   "monthly_value": 2720,
+   "violations": [
+    {
+     "product_id": "P15",
+     "product": "WhatsApp Business API Starter",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03292",
+   "business_type": "Diagnostic lab",
+   "city": "Visakhapatnam",
+   "city_tier": 2,
+   "employees": 5,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x2;P16x5;P20x4;P14x1",
+   "monthly_value": 4710,
+   "violations": [
+    {
+     "product_id": "P14",
+     "product": "Business SMS 10k",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03419",
+   "business_type": "Plastic moulding unit",
+   "city": "Ahmedabad",
+   "city_tier": 1,
+   "employees": 62,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "24\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZY",
+   "bundle": "P05x1;P08x6;P16x9;P21x1;P24x10;P11x1",
+   "monthly_value": 18310,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03473",
+   "business_type": "Law office",
+   "city": "Vadodara",
+   "city_tier": 2,
+   "employees": 18,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "24\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z3",
+   "bundle": "P03x1;P08x4;P16x7;P12x4;P09x1",
+   "monthly_value": 13150,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03516",
+   "business_type": "Law office",
+   "city": "Coimbatore",
+   "city_tier": 2,
+   "employees": 22,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "33\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZK",
+   "bundle": "P03x1;P07x3;P16x4;P17x1;P11x1;P09x1",
+   "monthly_value": 7590,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03673",
+   "business_type": "Travel agency",
+   "city": "Patna",
+   "city_tier": 2,
+   "employees": 23,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "10\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZS",
+   "bundle": "P03x1;P08x2;P16x7;P20x4;P11x1;P14x1",
+   "monthly_value": 9320,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03774",
+   "business_type": "Coaching centre",
+   "city": "Patna",
+   "city_tier": 2,
+   "employees": 6,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P03x1;P07x2;P16x6;P09x1",
+   "monthly_value": 6190,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier",
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03842",
+   "business_type": "Sweet shop",
+   "city": "Chennai",
+   "city_tier": 1,
+   "employees": 4,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x2;P22x1;P23x1;P15x1",
+   "monthly_value": 3970,
+   "violations": [
+    {
+     "product_id": "P15",
+     "product": "WhatsApp Business API Starter",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L03872",
+   "business_type": "Auto-parts unit",
+   "city": "Kochi",
+   "city_tier": 2,
+   "employees": 33,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "32\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZD",
+   "bundle": "P03x1;P08x4;P16x14;P11x1",
+   "monthly_value": 9640,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04070",
+   "business_type": "Stationery shop",
+   "city": "Ludhiana",
+   "city_tier": 2,
+   "employees": 2,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x2;P19x1;P15x1;P18x1",
+   "monthly_value": 3840,
+   "violations": [
+    {
+     "product_id": "P15",
+     "product": "WhatsApp Business API Starter",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04272",
+   "business_type": "Textile unit",
+   "city": "Bhopal",
+   "city_tier": 2,
+   "employees": 25,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "23\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z6",
+   "bundle": "P03x1;P08x4;P16x19;P21x1;P23x3",
+   "monthly_value": 13070,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04350",
+   "business_type": "Furniture workshop",
+   "city": "Mumbai",
+   "city_tier": 1,
+   "employees": 147,
+   "sites": 2,
+   "has_gstin": "Y",
+   "gstin": "27\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZG",
+   "bundle": "P06x1;P08x6;P16x11;P24x9;P11x1",
+   "monthly_value": 35170,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04451",
+   "business_type": "Furniture workshop",
+   "city": "Mysuru",
+   "city_tier": 2,
+   "employees": 53,
+   "sites": 2,
+   "has_gstin": "Y",
+   "gstin": "29\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZT",
+   "bundle": "P03x1;P08x4;P16x6;P21x1;P11x1",
+   "monthly_value": 10600,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04464",
+   "business_type": "Diagnostic lab",
+   "city": "Kochi",
+   "city_tier": 2,
+   "employees": 15,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "32\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZU",
+   "bundle": "P03x1;P08x3;P16x15;P20x5;P17x1;P09x1",
+   "monthly_value": 9940,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04566",
+   "business_type": "Textile unit",
+   "city": "Kochi",
+   "city_tier": 2,
+   "employees": 39,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "32\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z0",
+   "bundle": "P03x1;P08x6;P16x5;P21x1;P24x12;P20x8;P25x3",
+   "monthly_value": 15310,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04596",
+   "business_type": "Plastic moulding unit",
+   "city": "Vadodara",
+   "city_tier": 2,
+   "employees": 147,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "24\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZG",
+   "bundle": "P03x1;P08x5;P16x6;P20x7",
+   "monthly_value": 9770,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04888",
+   "business_type": "Law office",
+   "city": "Delhi",
+   "city_tier": 1,
+   "employees": 23,
+   "sites": 1,
+   "has_gstin": "N",
+   "gstin": "",
+   "bundle": "P01x1;P07x4;P16x9;P20x8;P17x1;P12x3;P09x1",
+   "monthly_value": 9720,
+   "violations": [
+    {
+     "product_id": "P12",
+     "product": "Cloud Telephony / SIP",
+     "rules": [
+      "gstin"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04911",
+   "business_type": "Law office",
+   "city": "Kochi",
+   "city_tier": 2,
+   "employees": 20,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "32\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z3",
+   "bundle": "P03x1;P08x4;P16x7;P20x8;P12x2;P11x1",
+   "monthly_value": 11520,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "tier"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04948",
+   "business_type": "Coaching centre",
+   "city": "Kolkata",
+   "city_tier": 1,
+   "employees": 4,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "19\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221ZQ",
+   "bundle": "P03x1;P07x4;P16x4;P12x4",
+   "monthly_value": 12110,
+   "violations": [
+    {
+     "product_id": "P03",
+     "product": "Biz Fibre 1G",
+     "rules": [
+      "employees"
+     ]
+    }
+   ]
+  },
+  {
+   "lead_id": "L04991",
+   "business_type": "Auto-parts unit",
+   "city": "Ludhiana",
+   "city_tier": 2,
+   "employees": 54,
+   "sites": 1,
+   "has_gstin": "Y",
+   "gstin": "03\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u20221Z4",
+   "bundle": "P05x1;P08x2;P16x19;P11x1",
+   "monthly_value": 14230,
+   "violations": [
+    {
+     "product_id": "P11",
+     "product": "Static IP",
+     "rules": [
+      "dependency"
+     ]
+    }
+   ]
+  }
+ ]
+}
