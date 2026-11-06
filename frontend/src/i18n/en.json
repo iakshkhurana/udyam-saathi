@@ -142,7 +142,6 @@
     "payLater": "Pay the first month at activation",
     "share": "Share on WhatsApp",
     "pdf": "Download PDF",
-    "shareText": "My Udyam Saathi quote: {{name}}, {{price}}/month + GST. Setup {{setup}}, {{months}}-month contract.",
     "updating": "Updating…"
   },
   "consent": {
@@ -211,22 +210,18 @@
     "resultReviewBody": "One or two things need a person to look. We'll message you within a few hours.",
     "resultFailed": "A few things need fixing",
     "resultFailedBody": "Fix the documents marked above and check again.",
-    "goTrack": "Track my order"
+    "goTrack": "Track my order",
+    "docOk": "Looks good",
+    "fromSample": "Read from the sample documents",
+    "ocrSlow": "Reading 4 documents. This takes 5–10 seconds.",
+    "resultIncomplete": "Some documents are missing",
+    "resultRetake": "A photo needs to be retaken",
+    "esigned": "e-Signed",
+    "docSeeBelow": "Needs attention, see below"
   },
   "track": {
     "order": "Order {{code}}",
     "nextUpdate": "Next update by {{time}}",
-    "stages": {
-      "QUOTE_ACCEPTED": "Quote accepted",
-      "CONSENT_GIVEN": "Consent given",
-      "KYC_VERIFIED": "KYC verified",
-      "KYC_REVIEW": "KYC under review",
-      "INSTALL_SCHEDULED": "Install scheduled",
-      "INSTALLED": "Installed",
-      "ACTIVATED": "Activated",
-      "DELAYED": "Delayed",
-      "CANCELLED": "Cancelled"
-    },
     "delayTitle": "Install moved to {{date}}",
     "credit": "Sorry about this. We've added a {{amount}} credit to your first bill.",
     "technician": "Technician",
@@ -246,7 +241,10 @@
     "simulateDelay": "Simulate delay",
     "copy": "Copy link",
     "copied": "Link copied",
-    "notFound": "We couldn't find this order. Check the link."
+    "notFound": "We couldn't find this order. Check the link.",
+    "visit": "{{date}}, between {{slot}}",
+    "rating": "{{rating}} rating",
+    "cancelled": "This order was cancelled."
   },
   "privacy": {
     "title": "Privacy centre",
@@ -254,19 +252,26 @@
     "orderId": "Order ID",
     "find": "Show my data",
     "holding": "What we hold",
-    "business": "Business",
     "gstin": "GSTIN",
-    "city": "City",
-    "consent": "KYC consent",
-    "given": "Given",
-    "notGiven": "Not given",
     "withdraw": "Withdraw consent",
     "withdrawBody": "We stop processing your KYC. Your order pauses until you give consent again.",
     "delete": "Delete my documents",
     "deleteBody": "All uploaded documents for this order are deleted now. This can't be undone.",
     "confirmDelete": "Yes, delete them",
-    "done": "Done. We've logged this request.",
-    "never": "We never ask for your Aadhaar number, PAN, date of birth or bank details."
+    "never": "We never ask for your Aadhaar number, PAN, date of birth or bank details.",
+    "status": "Order status",
+    "udyam": "Udyam",
+    "documents": "Documents",
+    "noDocs": "No documents stored",
+    "kycResult": "KYC result",
+    "consents": "Consent history",
+    "withdrawn": "Withdrawn",
+    "active": "Active",
+    "retention": "Retention",
+    "stored": "stored",
+    "deleted": "deleted",
+    "doneWithdraw": "Consent withdrawn. {{count}} document(s) deleted.",
+    "doneDelete": "{{count}} document(s) deleted. We've logged this request."
   },
   "bo": {
     "title": "Back office",
@@ -298,7 +303,9 @@
     "staff": "Staff",
     "bundle": "Bundle",
     "broken": "Rule broken",
-    "drop": "Dropped at"
+    "stage": "Stage reached",
+    "drop": "Drop reason",
+    "issues": "Needs a look"
   },
   "notFound": {
     "title": "This page doesn't exist",

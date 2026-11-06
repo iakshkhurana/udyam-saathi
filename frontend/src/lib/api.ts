@@ -6,12 +6,11 @@ import type {
   DocType,
   GstinLookup,
   Health,
-  KycDocResult,
   KycIdentifiersResult,
   KycQueueItem,
-  KycSampleResult,
-  KycVerifyResult,
+  KycView,
   Order,
+  PrivacyView,
   Quote,
   RulesAudit,
   UdyamLookup,
@@ -71,32 +70,34 @@ export const api = {
   getQuote: (id: string) => request<Quote>(`/quotes/${id}`),
   patchQuote: (id: string, items: { product_id: string; enabled?: boolean; qty?: number }[]) =>
     request<Quote>(`/quotes/${id}`, { method: "PATCH", body: JSON.stringify({ items }) }),
-  acceptQuote: (id: string) => post<{ order_id: string }>(`/quotes/${id}/accept`),
+  acceptQuote: (id: string) => post<Order>(`/quotes/${id}/accept`),
 
   giveConsent: (body: { order_id: string; kyc: boolean; marketing_whatsapp: boolean; language: string }) =>
-    post<{ id: string }>("/consents", body),
+    post<{ order_id: string; purposes: string[] }>("/consents", body),
 
+  kyc: (orderId: string) => request<KycView>(`/kyc/${orderId}`),
   kycIdentifiers: (orderId: string, body: { gstin?: string; udyam?: string; no_udyam?: boolean }) =>
     post<KycIdentifiersResult>(`/kyc/${orderId}/identifiers`, body),
   kycUpload: (orderId: string, doc: DocType, file: File) => {
     const fd = new FormData();
     fd.append("file", file);
-    return request<KycDocResult>(`/kyc/${orderId}/documents/${doc}`, { method: "POST", body: fd });
+    return request<KycView>(`/kyc/${orderId}/documents/${doc}`, { method: "POST", body: fd });
   },
   kycSample: (orderId: string, applicant: string) =>
-    post<KycSampleResult>(`/kyc/${orderId}/load-sample/${applicant}`),
-  kycVerify: (orderId: string) => post<KycVerifyResult>(`/kyc/${orderId}/verify`),
-  kycEsign: (orderId: string, otp: string) => post<{ ok: boolean }>(`/kyc/${orderId}/esign`, { otp }),
+    post<KycView>(`/kyc/${orderId}/load-sample/${applicant}`),
+  kycVerify: (orderId: string) => post<KycView & { order: Order }>(`/kyc/${orderId}/verify`),
+  kycEsign: (orderId: string, otp: string) => post<{ ok: boolean; esigned: boolean }>(`/kyc/${orderId}/esign`, { otp }),
 
   order: (id: string) => request<Order>(`/orders/${id}`),
   advance: (id: string) => post<Order>(`/orders/${id}/advance`),
   delay: (id: string) => post<Order>(`/orders/${id}/delay`),
-  nps: (id: string, score: number) => post<Order>(`/orders/${id}/nps`, { score }),
+  nps: (id: string, score: number) => post<{ ok: boolean; nps: number }>(`/orders/${id}/nps`, { score }),
   referral: (body: { order_id: string; business_name: string; phone: string }) =>
-    post<{ id: string }>("/referrals", body),
+    post<{ ok: boolean; referral_id: string }>("/referrals", body),
 
-  withdraw: (order_id: string) => post<{ ok: boolean }>("/privacy/withdraw", { order_id }),
-  deleteData: (order_id: string) => request<{ ok: boolean }>(`/privacy/data/${order_id}`, { method: "DELETE" }),
+  privacy: (order_id: string) => request<PrivacyView>(`/privacy/${order_id}`),
+  withdraw: (order_id: string) => post<{ ok: boolean; documents_deleted: number; order_status: string }>("/privacy/withdraw", { order_id }),
+  deleteData: (order_id: string) => request<{ ok: boolean; documents_deleted: number }>(`/privacy/data/${order_id}`, { method: "DELETE" }),
 
   bo: {
     sessions: (pin: string) => request<BackofficeSession[]>("/backoffice/sessions", pinHeader(pin)),

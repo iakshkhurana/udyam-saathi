@@ -17,7 +17,9 @@ function Logo() {
       <span className="grid h-[34px] w-[34px] place-items-center rounded-[10px] bg-gradient-to-br from-brand-400 to-brand-700 text-white shadow-[inset_0_1px_0_rgba(255,255,255,.4)]">
         <House size={18} strokeWidth={2.2} />
       </span>
-      Udyam Saathi<span className="text-brand-600">.</span>
+      <span>
+        Udyam Saathi<span className="text-brand-600">.</span>
+      </span>
     </Link>
   );
 }

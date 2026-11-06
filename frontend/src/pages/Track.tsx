@@ -9,16 +9,16 @@ import { api, ApiError } from "../lib/api";
 import { clockTime, cx, pick, rupees, shortDate } from "../lib/format";
 import type { Order } from "../lib/types";
 
+const sentence = (s: string) => (s ? `${s.charAt(0).toUpperCase()}${s.slice(1)}${/[.।]$/.test(s) ? "" : "."}` : s);
+
 function Stages({ order }: { order: Order }) {
-  const { t, i18n } = useTranslation();
-  const done = order.stages.filter((s) => s.state === "done").length;
-  const pct = Math.round(((done + 0.5) / order.stages.length) * 100);
+  const { i18n } = useTranslation();
   return (
     <div className="card p-4">
       <div className="h-2 overflow-hidden rounded-full bg-[#EEEAFB]">
         <motion.div
           initial={{ width: 0 }}
-          animate={{ width: `${order.status === "ACTIVATED" ? 100 : pct}%` }}
+          animate={{ width: `${order.progress}%` }}
           transition={{ duration: 1, ease: [0.2, 0.7, 0.2, 1] }}
           className="h-full rounded-full bg-gradient-to-r from-brand-400 to-brand-600"
         />
@@ -43,8 +43,8 @@ function Stages({ order }: { order: Order }) {
             ) : (
               <span className="relative h-[22px] w-[22px] flex-none rounded-full border-2 border-brand-200 bg-white" />
             )}
-            <div className={cx("flex flex-1 justify-between gap-2 text-sm", s.state === "current" && "font-semibold", s.state === "pending" && "text-ink-muted")}>
-              <span>{t(`track.stages.${s.status}`)}</span>
+            <div className={cx("flex flex-1 justify-between gap-2 text-sm", s.state === "current" && "font-semibold", s.state === "upcoming" && "text-ink-muted")}>
+              <span>{pick(s, "label", i18n.language)}</span>
               <span className={cx("text-xs", s.state === "current" ? "text-brand-700" : "text-ink-muted")}>{shortDate(s.date, i18n.language)}</span>
             </div>
           </motion.li>
@@ -54,14 +54,14 @@ function Stages({ order }: { order: Order }) {
   );
 }
 
-function Nps({ order, onDone }: { order: Order; onDone: (o: Order) => void }) {
+function Nps({ order, onDone }: { order: Order; onDone: (nps: number) => void }) {
   const { t } = useTranslation();
   const [busy, setBusy] = useState<number | null>(null);
   if (order.nps !== null) return <div className="card p-4 text-sm font-medium text-ok-text">{t("track.npsThanks")}</div>;
   const send = async (score: number) => {
     setBusy(score);
     try {
-      onDone(await api.nps(order.id, score));
+      onDone((await api.nps(order.id, score)).nps);
     } finally {
       setBusy(null);
     }
@@ -215,8 +215,8 @@ function TrackOrder({ orderId }: { orderId: string }) {
   return (
     <AppShell
       back="/"
-      title={t("track.order", { code: order.short_code })}
-      subtitle={[order.bundle_name, order.city].filter(Boolean).join(" · ")}
+      title={t("track.order", { code: order.id })}
+      subtitle={order.bundle_name}
       right={
         <button type="button" onClick={copy} aria-label={t("track.copy")} className="grid h-11 w-11 place-items-center rounded-2xl bg-white/80 text-ink transition hover:bg-white">
           {copied ? <Check size={18} className="text-ok" /> : <LinkIcon size={18} />}
@@ -225,18 +225,22 @@ function TrackOrder({ orderId }: { orderId: string }) {
     >
       <div className="flex flex-col gap-3 px-4 pb-8 pt-2">
         <div className="flex flex-wrap items-center gap-2">
-          {order.next_update_by && !activated && <Pill tone="white">{t("track.nextUpdate", { time: clockTime(order.next_update_by, lang) })}</Pill>}
+          {order.next_update_by && !activated && !order.cancelled && (
+            <Pill tone="white">{t("track.nextUpdate", { time: `${shortDate(order.next_update_by.slice(0, 10), lang)}, ${clockTime(order.next_update_by, lang)}` })}</Pill>
+          )}
           <Pill tone="brand">{rupees(order.monthly_total)}{t("common.perMonth")}</Pill>
           {copied && <Pill tone="ok">{t("track.copied")}</Pill>}
         </div>
 
+        {order.cancelled && <div className="rounded-[18px] border border-bad-line bg-bad-bg p-3.5 text-[13px] font-medium text-bad-text">{t("track.cancelled")}</div>}
+
         <AnimatePresence>
-          {order.delay && (
+          {order.delay && !activated && (
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="flex gap-3 rounded-[18px] border border-warn-line bg-warn-bg p-3.5 text-[13px] leading-relaxed text-[#6B3A00]">
               <Alert size={20} className="mt-0.5 flex-none text-warn" />
               <div>
                 <strong className="block text-warn-text">{t("track.delayTitle", { date: shortDate(order.delay.new_date, lang) })}</strong>
-                {pick(order.delay, "reason", lang)} {t("track.credit", { amount: rupees(order.delay.credit_inr) })}
+                {sentence(pick(order.delay, "reason", lang))} {t("track.credit", { amount: rupees(order.delay.credit_inr) })}
               </div>
             </motion.div>
           )}
@@ -244,12 +248,12 @@ function TrackOrder({ orderId }: { orderId: string }) {
 
         <Stages order={order} />
 
-        {order.technician && !activated && (
+        {!activated && !order.cancelled && order.technician.date && (
           <Reveal y={14} className="flex items-center gap-3 rounded-[22px] bg-gradient-to-br from-brand-600 to-brand-800 p-3.5 text-white">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-white/20 font-display font-extrabold">{order.technician.name.charAt(0)}</span>
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-white/20 font-display font-extrabold">{pick(order.technician, "name", lang).charAt(0)}</span>
             <div className="min-w-0 flex-1">
-              <div className="font-semibold">{order.technician.name} · {t("track.technician")}</div>
-              <div className="text-xs text-[#DCD3FF]">{pick(order.technician, "visit", lang)}</div>
+              <div className="font-semibold">{pick(order.technician, "name", lang)} · {t("track.technician")}</div>
+              <div className="text-xs text-[#DCD3FF]">{t("track.visit", { date: shortDate(order.technician.date, lang), slot: pick(order.technician, "slot", lang) })}</div>
             </div>
             <span className="flex items-center gap-1.5 rounded-xl bg-white/15 px-2.5 py-2 font-mono text-xs">
               <Phone size={14} /> {order.technician.phone_masked}
@@ -259,7 +263,7 @@ function TrackOrder({ orderId }: { orderId: string }) {
 
         {activated && (
           <>
-            <Nps order={order} onDone={o.set} />
+            <Nps order={order} onDone={(nps) => o.set({ ...order, nps })} />
             <Referral orderId={order.id} />
           </>
         )}
@@ -268,16 +272,16 @@ function TrackOrder({ orderId }: { orderId: string }) {
           <div className="flex flex-col gap-2">
             <span className="eyebrow">{t("track.updates")}</span>
             <AnimatePresence initial={false}>
-              {order.notifications.map((n) => (
+              {order.notifications.map((n, i) => (
                 <motion.div
-                  key={n.id}
+                  key={`${n.status}-${i}`}
                   layout
                   initial={{ opacity: 0, y: 10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   className="max-w-[88%] self-start rounded-[4px_16px_16px_16px] bg-white px-3 py-2.5 text-[13px] leading-relaxed shadow-[0_4px_14px_rgba(74,47,214,.08)]"
                 >
-                  {pick(n, "text", lang)}
-                  <div className="mt-1 text-right text-[11px] text-ink-muted">{clockTime(n.created_at, lang)}</div>
+                  {pick(n, "message", lang)}
+                  <div className="mt-1 text-right text-[11px] text-ink-muted">{shortDate(n.date, lang)}</div>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -288,10 +292,10 @@ function TrackOrder({ orderId }: { orderId: string }) {
           <div className="mt-2 rounded-[18px] border border-dashed border-brand-300 p-3">
             <span className="eyebrow">{t("track.demo")}</span>
             <div className="mt-2 grid grid-cols-2 gap-2">
-              <button type="button" disabled={demoBusy || activated} onClick={() => runDemo(api.advance)} className="btn-outline min-h-[44px] text-[13px]">
+              <button type="button" disabled={demoBusy || activated || order.cancelled} onClick={() => runDemo(api.advance)} className="btn-outline min-h-[44px] text-[13px]">
                 {t("track.advance")}
               </button>
-              <button type="button" disabled={demoBusy || activated || !!order.delay} onClick={() => runDemo(api.delay)} className="btn-outline min-h-[44px] text-[13px]">
+              <button type="button" disabled={demoBusy || activated || order.cancelled || !!order.delay} onClick={() => runDemo(api.delay)} className="btn-outline min-h-[44px] text-[13px]">
                 {t("track.simulateDelay")}
               </button>
             </div>

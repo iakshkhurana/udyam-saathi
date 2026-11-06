@@ -1,8 +1,4 @@
-// Shapes returned by the FastAPI backend. Advisor + registry types mirror
-// backend/app/schemas.py and services/advisor.py. Quote, KYC, order and
-// back-office types are the contract the Phase 4–6 routers must return.
-
-export type Lang = "en" | "hi" | "ta" | "te" | "kn" | "mr" | "gu" | "bn" | "pa" | "ml";
+// Response shapes of the FastAPI backend (backend/app/routers, services/*_view).
 
 export interface Health {
   status: string;
@@ -69,17 +65,18 @@ export interface AdvisorTurn {
   bundle: Bundle | null;
   mode: "ai" | "guided";
   language: string;
-  status: "open" | "lead" | "quoted" | string;
+  status: "open" | "lead" | "quoted";
   slot?: string | null;
 }
 
+export type GstinStatus = "Active" | "Cancelled" | "Suspended" | "Invalid" | "NotFound";
+
 export interface GstinLookup {
-  gstin: string;
   gstin_masked: string;
   format_ok: boolean;
   checksum_ok: boolean;
   found: boolean;
-  status: "Active" | "Cancelled" | "Suspended" | "Invalid" | "NotFound";
+  status: GstinStatus;
   legal_name?: string;
   trade_name?: string;
   constitution?: string;
@@ -89,7 +86,6 @@ export interface GstinLookup {
 }
 
 export interface UdyamLookup {
-  udyam: string;
   udyam_masked: string;
   format_ok: boolean;
   found: boolean;
@@ -103,10 +99,13 @@ export interface UdyamLookup {
 
 export interface Quote extends Bundle {
   id: string;
-  session_id: string | null;
   status: "draft" | "accepted";
-  warnings_en?: string[];
-  warnings_hi?: string[];
+  session_id: string | null;
+  language: string;
+  warnings_en: string[];
+  warnings_hi: string[];
+  share_text: string;
+  whatsapp_url: string;
 }
 
 export type OrderStatus =
@@ -124,75 +123,94 @@ export type DocType = "gst_certificate" | "udyam_certificate" | "signatory_id" |
 export type CheckStatus = "pass" | "warn" | "fail";
 
 export interface KycCheck {
-  name: string;
-  status: CheckStatus;
+  id: string;
+  status: CheckStatus | "skip";
   message_en: string;
   message_hi: string;
+  doc: DocType | null;
+  evidence: Record<string, unknown>;
 }
 
-export interface KycDocResult {
-  doc_type: DocType;
-  status: CheckStatus;
-  message_en: string;
-  message_hi: string;
+export type KycStatus = "PENDING" | "PASS" | "PASS_WITH_WARNINGS" | "FAIL" | "RETAKE" | "INCOMPLETE";
+
+export interface KycView {
+  order_id: string;
+  status: KycStatus;
+  esigned: boolean;
+  no_udyam: boolean;
+  typed_gstin: string | null;
+  typed_udyam: string | null;
+  documents: Partial<Record<DocType, { detected_type: string | null; blur_score: number | null; fields: Record<string, unknown>; status: CheckStatus | null }>>;
   checks: KycCheck[];
-  fields?: Record<string, string | null>;
 }
 
 export interface KycIdentifiersResult {
-  gstin: GstinLookup | null;
-  udyam: UdyamLookup | null;
-}
-
-export interface KycSampleResult extends KycIdentifiersResult {
-  documents: KycDocResult[];
-}
-
-export interface KycVerifyResult {
-  status: "KYC_VERIFIED" | "KYC_REVIEW" | "KYC_FAILED";
-  documents: KycDocResult[];
-  checks: KycCheck[];
+  gstin?: GstinLookup;
+  udyam?: UdyamLookup;
 }
 
 export interface OrderStage {
   status: OrderStatus;
-  state: "done" | "current" | "pending";
+  label_en: string;
+  label_hi: string;
+  state: "done" | "current" | "upcoming";
   date: string | null;
+  expected: boolean;
 }
 
 export interface OrderNotification {
-  id: string;
-  created_at: string;
-  text_en: string;
-  text_hi: string;
+  status: OrderStatus;
+  date: string;
+  message_en: string;
+  message_hi: string;
 }
 
 export interface Order {
   id: string;
-  short_code: string;
   status: OrderStatus;
+  cancelled: boolean;
+  language: string;
   bundle_name: string;
   monthly_total: number;
-  city: string | null;
-  gstin_masked: string | null;
-  consent_given: boolean;
+  setup_total: number;
+  contract_months: number;
+  items: { product_id: string; name: string; qty: number; monthly: number }[];
+  progress: number;
   stages: OrderStage[];
   next_update_by: string | null;
-  notifications: OrderNotification[];
-  technician: { name: string; phone_masked: string; visit_en: string; visit_hi: string } | null;
-  delay: { reason_en: string; reason_hi: string; new_date: string; credit_inr: number } | null;
+  technician: { name_en: string; name_hi: string; phone_masked: string; rating: number; slot_en: string; slot_hi: string; date: string | null };
+  delay: { reason_en: string; reason_hi: string; old_date: string; new_date: string; credit_inr: number } | null;
+  credit_inr: number;
   nps: number | null;
+  notifications: OrderNotification[];
 }
+
+export interface PrivacyView {
+  order_id: string;
+  status: OrderStatus;
+  gstin: string | null;
+  udyam: string | null;
+  documents: { type: DocType; stored: boolean; uploaded: string }[];
+  kyc_result: KycStatus | null;
+  consents: { purposes: string[]; given: string; withdrawn: string | null }[];
+  retention_en: string;
+  retention_hi: string;
+}
+
+export type Heat = "Hot" | "Warm" | "Cold";
 
 export interface BackofficeSession {
   id: string;
   created_at: string;
+  channel: string;
   language: string;
   reason: string;
-  profile: Record<string, unknown>;
   score: number;
-  label: "Hot" | "Warm" | "Cold";
+  label: Heat;
   action: string;
+  profile: Record<string, unknown>;
+  bundle_name: string | null;
+  monthly_total: number | null;
 }
 
 export interface BackofficeLead {
@@ -200,22 +218,24 @@ export interface BackofficeLead {
   business_type: string;
   segment: string;
   city: string;
-  city_tier: number;
   lead_source: string;
+  language: string;
+  employees: number;
   has_gstin: string;
   drop_reason: string | null;
+  stage_reached: string | null;
   score: number;
-  label: "Hot" | "Warm" | "Cold";
+  label: Heat;
   action: string;
 }
 
 export interface KycQueueItem {
   order_id: string;
-  short_code: string;
-  business_name: string;
-  gstin_masked: string | null;
-  submitted_at: string;
-  documents: KycDocResult[];
+  status: KycStatus;
+  business: string;
+  gstin: string | null;
+  warnings: KycCheck[];
+  updated_at: string;
 }
 
 export interface AuditRow {
@@ -232,7 +252,6 @@ export interface AuditRow {
   violations: { product_id: string; product: string; rules: string[] }[];
 }
 
-// Same shape as docs/rules_audit.json
 export interface RulesAudit {
   activated: number;
   flagged: number;

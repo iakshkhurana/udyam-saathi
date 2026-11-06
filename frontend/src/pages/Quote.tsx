@@ -7,7 +7,7 @@ import { Alert, ArrowRight, Printer, Share } from "../components/Icons";
 import { ErrorState, PageLoader, Rise, Spinner, Stepper, Toggle, useLoad } from "../components/ui";
 import { api } from "../lib/api";
 import { pick, pickList, rupees } from "../lib/format";
-import type { BundleItem, Quote } from "../lib/types";
+import type { BundleItem } from "../lib/types";
 
 const FIXED_QTY_UNITS = new Set(["per account", "per pack", "per number"]);
 
@@ -75,20 +75,13 @@ export default function QuotePage() {
     setAccepting(true);
     setError(null);
     try {
-      const { order_id } = await api.acceptQuote(id);
-      nav(`/consent/${order_id}`);
+      const order = await api.acceptQuote(id);
+      nav(`/consent/${order.id}`);
     } catch (e) {
       setError(e);
       setAccepting(false);
     }
   };
-
-  const shareUrl = (qt: Quote) =>
-    `https://wa.me/?text=${encodeURIComponent(
-      t("quote.shareText", { name: qt.bundle_name, price: rupees(qt.monthly_total), setup: rupees(qt.setup_total), months: qt.contract_months }) +
-        "\n" +
-        qt.items.filter((i) => i.enabled).map((i) => `• ${i.name}${i.qty > 1 ? ` × ${i.qty}` : ""}: ${rupees(i.monthly)}`).join("\n"),
-    )}`;
 
   if (!quote) {
     return (
@@ -126,7 +119,7 @@ export default function QuotePage() {
           </button>
           <span className="font-display font-bold">{t("quote.title")}</span>
           <div className="flex gap-1.5">
-            <a href={shareUrl(quote)} target="_blank" rel="noreferrer" aria-label={t("quote.share")} className="grid h-11 w-11 place-items-center rounded-2xl bg-white/15 transition hover:bg-white/25">
+            <a href={quote.whatsapp_url} target="_blank" rel="noreferrer" aria-label={t("quote.share")} className="grid h-11 w-11 place-items-center rounded-2xl bg-white/15 transition hover:bg-white/25">
               <Share />
             </a>
             <button type="button" onClick={() => window.print()} aria-label={t("quote.pdf")} className="grid h-11 w-11 place-items-center rounded-2xl bg-white/15 transition hover:bg-white/25">
