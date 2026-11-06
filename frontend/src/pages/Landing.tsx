@@ -58,25 +58,6 @@ function Mark({ children }: { children: ReactNode }) {
   );
 }
 
-function CursorTag({ label, tone, className, delay }: { label: string; tone: "brand" | "ink"; className: string; delay: number }) {
-  return (
-    <motion.span
-      aria-hidden
-      initial={{ opacity: 0, scale: 0.6, y: 8 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 320, damping: 18, delay }}
-      className={cx("pointer-events-none absolute flex items-start gap-0.5", className)}
-    >
-      <svg width="14" height="14" viewBox="0 0 14 14" className={tone === "brand" ? "text-brand-600" : "text-ink"}>
-        <path d="M1 1l11 4.6-4.7 1.7L5.6 12z" fill="currentColor" />
-      </svg>
-      <span className={cx("mt-2.5 whitespace-nowrap rounded-full px-2 py-0.5 font-sans text-[11px] font-semibold tracking-normal text-white", tone === "brand" ? "bg-brand-600" : "bg-ink")}>
-        {label}
-      </span>
-    </motion.span>
-  );
-}
-
 function Nav() {
   const { t } = useTranslation();
   const { scrollY } = useScroll();
@@ -233,13 +214,11 @@ function Hero() {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.7, ease, delay: 0.75 }}
-              className="absolute inset-x-0 bottom-[.04em] top-[.1em] origin-left -rotate-[1.5deg] rounded-[.22em] bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_14px_30px_-10px_rgba(90,59,240,.6)]"
+              className="absolute inset-x-0 -bottom-[.08em] top-[.1em] origin-left -rotate-[1.5deg] rounded-[.22em] bg-gradient-to-br from-brand-500 to-brand-700 shadow-[0_14px_30px_-10px_rgba(90,59,240,.6)]"
             />
             <motion.span initial={{ color: "#16132D" }} animate={{ color: "#FFFFFF" }} transition={{ delay: 0.95, duration: 0.3 }} className="relative">
               {t("landing.title2Mark")}
             </motion.span>
-            <CursorTag label={t("landing.cursorSaathi")} tone="brand" delay={1.3} className="hidden sm:left-full sm:top-[-2px] sm:ml-1 sm:flex" />
-            <CursorTag label={t("landing.cursorYou")} tone="ink" delay={1.6} className="-bottom-8 -left-3" />
           </span>
         </motion.h1>
         <motion.p {...fade(0.2)} className="mx-auto mt-8 max-w-[620px] text-lg leading-relaxed text-[#4A4766]">
