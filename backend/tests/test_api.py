@@ -141,3 +141,42 @@ def test_no_unmasked_identifiers_in_logs(client):
     assert "27••••••••••1ZP" in text
     assert not RAW_GSTIN.search(text) and not RAW_UDYAM.search(text) and not RAW_PHONE.search(text)
     assert "SYN-ID-123456" not in text
+
+
+PIN = {"X-Backoffice-Pin": "2026"}
+
+
+def test_backoffice_requires_pin(client):
+    assert client.get("/api/backoffice/leads").status_code == 401
+    assert client.get("/api/backoffice/leads", headers={"X-Backoffice-Pin": "0000"}).status_code == 401
+
+
+def test_backoffice_leads_sorted_with_actions(client):
+    rows = client.get("/api/backoffice/leads?segment=micro&limit=50", headers=PIN).json()
+    scores = [r["score"] for r in rows]
+    assert rows and scores == sorted(scores, reverse=True) and all(r["segment"] == "micro" for r in rows)
+    assert all(r["action"] == "Offer the no-GST starter bundle" for r in rows if r["has_gstin"] == "N")
+    assert client.get("/api/backoffice/rules-audit", headers=PIN).json()["flagged"] == 48
+
+
+def test_callback_creates_scored_lead(client):
+    sid = client.post("/api/advisor/sessions", json={"language": "en"}).json()["session_id"]
+    client.post(f"/api/advisor/sessions/{sid}/message", json={"text": "Kirana store"})
+    client.post(f"/api/advisor/sessions/{sid}/message", json={"chip": "action:callback"})
+    lead = next(s for s in client.get("/api/backoffice/sessions", headers=PIN).json() if s["id"] == sid)
+    assert lead["reason"] == "Asked for a callback" and 0 <= lead["score"] <= 100 and lead["label"]
+
+
+@needs_ocr
+def test_review_queue_approve(client):
+    oid = new_order(client)
+    consent(client, oid)
+    client.post(f"/api/kyc/{oid}/load-sample/K09")
+    client.post(f"/api/kyc/{oid}/verify")
+    queue = client.get("/api/backoffice/kyc-queue", headers=PIN).json()
+    item = next(q for q in queue if q["order_id"] == oid)
+    assert any(w["id"] == "C17" for w in item["warnings"]) and "•" in item["gstin"]
+    full = client.get(f"/api/backoffice/kyc/{oid}/full", headers=PIN).json()
+    assert full["certificate_gstin"] == "37LDYXK0296F1ZB"
+    out = client.post(f"/api/backoffice/kyc/{oid}/decision", json={"decision": "approve"}, headers=PIN).json()
+    assert out["order_status"] == "KYC_VERIFIED"

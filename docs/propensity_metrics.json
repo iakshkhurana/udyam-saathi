@@ -1,0 +1,55 @@
+{
+ "roc_auc": 0.68,
+ "n_train": 4000,
+ "n_test": 1000,
+ "top_coefficients": [
+  [
+   "lead_source_WhatsApp campaign",
+   -0.994
+  ],
+  [
+   "lead_source_Referral",
+   0.95
+  ],
+  [
+   "segment_Micro retail & services",
+   -0.811
+  ],
+  [
+   "has_gstin_N",
+   -0.702
+  ],
+  [
+   "has_gstin_Y",
+   0.606
+  ],
+  [
+   "lead_source_Website form",
+   -0.584
+  ],
+  [
+   "preferred_language_Tamil",
+   -0.52
+  ],
+  [
+   "preferred_language_Kannada",
+   -0.351
+  ],
+  [
+   "lead_source_Inbound call",
+   0.333
+  ],
+  [
+   "segment_Small multi-site businesses",
+   0.301
+  ],
+  [
+   "city_tier_2",
+   -0.298
+  ],
+  [
+   "segment_Small manufacturers",
+   0.286
+  ]
+ ]
+}

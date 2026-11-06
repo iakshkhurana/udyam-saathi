@@ -133,4 +133,3 @@ class Withdraw(BaseModel):
 
 class KycDecision(BaseModel):
     decision: Literal["approve", "reject"]
-    pin: str

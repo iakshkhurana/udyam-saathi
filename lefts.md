@@ -1,5 +1,5 @@
 # lefts.md – Status of the Udyam Saathi build
-_Last updated: 2026-11-06 · Current phase: 6_
+_Last updated: 2026-11-06 · Current phase: 8_
 
 ## ✅ Done
 - Phase 0: repo structure, `.gitignore`, `.env.example`, `lefts.md`; data moved to `data/raw/YTL_TrackA_Udyam_Digital_Data/`
@@ -9,6 +9,8 @@ _Last updated: 2026-11-06 · Current phase: 6_
 - Phase 4: `services/quote.py` (quote from session/profile, toggles + quantities re-validated by the rules engine, base-off removes dependents with a warning, WhatsApp share text/link), `routers/quote.py` (`POST/GET/PATCH /quotes`, `/accept` → order), `routers/consent.py` (DPDP consent record: purposes, notice version, language, hashed IP; `require_consent` gate for KYC), `services/storage.py` (Fernet-encrypted document store, audit log, retention job), `routers/privacy.py`, `services/tracker.py` + `routers/orders.py` (order creation and stage events)
 - Phase 5: Smart KYC – `services/kyc/ocr.py` (saturation-based watermark removal, Laplacian blur score, projection-profile deskew + OCR-label fallback −12°…+12°, Tesseract psm 6 with word positions, extra adaptive/Otsu/psm-4 passes for identifiers), `parsers.py` (doc-type detection, column-aware label/value parsing, wrapped-address joining, signatory stacked layout), `checks.py` (C01–C18), `service.py` (encrypted store, evaluation, verify → order status, sample loader), `routers/kyc.py` (all endpoints consent-gated, 403 without consent), `scripts/calibrate_blur.py`, `scripts/run_kyc_samples.py` → `docs/kyc_results.md`; `tests/test_kyc_samples.py` 15/15, `tests/test_api.py` 12/12
 - Phase 6: `services/tracker.py` – stages QUOTE_ACCEPTED → CONSENT_GIVEN → KYC_VERIFIED/KYC_REVIEW → INSTALL_SCHEDULED → INSTALLED → ACTIVATED (+ DELAYED, CANCELLED), install date = KYC date + max install days skipping Sundays, activation +1 day, EN/HI WhatsApp-style notifications for every event, fictional technician card, proactive delay (reason + new date + apology + automatic ₹100 credit), NPS after activation, referral → back-office lead; demo endpoints `/orders/{id}/advance` and `/delay`
+- Phase 7: frontend is being built by a parallel Claude session (`airtel-50`) assigned by the user to `frontend/`; this session does not edit `frontend/`. API contract sent to that session.
+- Phase 8: `routers/backoffice.py` (PIN via `X-Backoffice-Pin`; advisor leads not closed incl. abandoned >30 min and referrals, historical dropped leads with propensity score + recommended action and filters, KYC review queue with approve/reject, audited full-ID reviewer view, rules audit), `scripts/train_propensity.py` (ROC-AUC 0.68, model in `backend/models/propensity.joblib`, scores stored on leads), `scripts/analyze_leads.py` → `docs/insights.md` + `docs/charts/*.png` (all spec figures reproduced exactly); back-office tests added – full suite 64 passed, 1 skipped
 
 ## ⏳ Left for humans (do these yourself)
 - [ ] (filled in as the build progresses)
@@ -56,12 +58,18 @@ _Last updated: 2026-11-06 · Current phase: 6_
 - Order IDs are 8-character hex short codes used directly in the public tracker link `/track/<id>` (no login; masked data only).
 - Event dates follow the simulated clock (`APP_TODAY` + schedule) so the demo timeline reads naturally.
 
+- "Fixable" drop reasons (1,485 of 4,632): owner had no time for a visit, visit not scheduled, quote too complex, quote too slow, missing GST/Udyam document, paperwork too long, signatory not available, document details mismatch. "Installation delayed" (98) is an ops fix, not counted.
+- Propensity labels use the spec cut-offs (Hot ≥ 70, Warm 40–69, Cold < 40) on `class_weight="balanced"` probabilities, so many dropped leads score Hot; the list is meant to be read as a ranking (sorted by score). Calibrating cut-offs to call-centre capacity is a business decision.
+- Charts avoid dual axes: activation rate and CAC by source are two side-by-side panels.
+
 ## ❌ Known issues / failing tests
 - none yet
 
 ## 📊 Key results (for the PPT)
 - Rules audit: 48 / 368 sold bundles (13%) break catalogue rules – city tier 24, GSTIN 12, dependency 9, employees 8 (exact match with the expected counts)
 - KYC: 12/12 applicants match the derived answer key (primary flag caught 12/12) – see `docs/kyc_results.md`
+- Propensity model ROC-AUC: 0.68 (held-out 20%); top drivers: referral (+), WhatsApp campaign (−), micro segment (−), GSTIN (+), Tamil/Kannada (−)
+- Insights reproduced: 368 activations, CAC ₹15,053, churn 15.2%, referral 14.8% / ₹4,099 vs field sales 7.3% / ₹24,335, churn 6% (1 call) → 28% (5 calls), GSTIN 9.6% vs 2.0%, segments 4.1 / 11.1 / 11.0 / 12.8%, fixable drops 1,485 / 4,632
 - Advisor tests: 15/15 pass in guided mode (scenario 6 asserts the English fallback note; the Tamil reply test runs only with `TEST_ANTHROPIC_API_KEY`)
 
 ## ▶️ How to run (short)
