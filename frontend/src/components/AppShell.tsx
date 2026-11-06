@@ -5,14 +5,14 @@ import { setChatLang } from "../i18n";
 import { cx } from "../lib/format";
 import { ChevronLeft } from "./Icons";
 
-export function LangToggle({ dark = false }: { dark?: boolean }) {
+export function LangToggle({ dark = false, onBrand = false }: { dark?: boolean; onBrand?: boolean }) {
   const { i18n, t } = useTranslation();
   const opts = [
     { code: "en", label: "EN" },
     { code: "hi", label: "हिं" },
   ];
   return (
-    <div role="group" aria-label={t("common.language")} className={cx("flex rounded-[10px] p-[3px] text-xs font-semibold", dark ? "bg-white/10" : "bg-white/80")}>
+    <div role="group" aria-label={t("common.language")} className={cx("flex rounded-[10px] p-[3px] text-xs font-semibold", onBrand ? "bg-white/15" : dark ? "bg-white/10" : "bg-white/80")}>
       {opts.map((o) => {
         const on = i18n.language === o.code;
         return (
@@ -23,7 +23,13 @@ export function LangToggle({ dark = false }: { dark?: boolean }) {
             onClick={() => setChatLang(o.code)}
             className={cx(
               "min-h-[32px] rounded-lg px-2.5 transition-colors",
-              on ? "bg-brand-600 text-white shadow-sm" : dark ? "text-white/70 hover:text-white" : "text-ink-muted hover:text-ink",
+              on
+                ? onBrand
+                  ? "bg-white text-brand-800 shadow-sm"
+                  : "bg-brand-600 text-white shadow-sm"
+                : dark || onBrand
+                  ? "text-white/75 hover:text-white"
+                  : "text-ink-muted hover:text-ink",
             )}
           >
             {o.label}

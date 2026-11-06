@@ -2,7 +2,7 @@ import { animate, AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppShell } from "../components/AppShell";
+import { AppShell, LangToggle } from "../components/AppShell";
 import { Alert, ArrowRight, Printer, Share } from "../components/Icons";
 import { ErrorState, PageLoader, Rise, Spinner, Stepper, Toggle, useLoad } from "../components/ui";
 import { api } from "../lib/api";
@@ -118,7 +118,8 @@ export default function QuotePage() {
             <ArrowRight size={20} className="rotate-180" />
           </button>
           <span className="font-display font-bold">{t("quote.title")}</span>
-          <div className="flex gap-1.5">
+          <div className="flex items-center gap-1.5">
+            <LangToggle onBrand />
             <a href={quote.whatsapp_url} target="_blank" rel="noreferrer" aria-label={t("quote.share")} className="grid h-11 w-11 place-items-center rounded-2xl bg-white/15 transition hover:bg-white/25">
               <Share />
             </a>
