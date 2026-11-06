@@ -294,9 +294,10 @@ def _why(profile: Profile, items: list[BundleItem], monthly: int, setup: int, co
     sites_hi = f" {profile.sites} लोकेशन पर" if profile.sites > 1 else ""
     en, hi = [], []
     if base:
-        en.append(f"For your {word_en} with {profile.employees} people{sites_en}, "
-                  f"{base.name} keeps everything online.")
-        hi.append(f"{profile.employees} लोगों वाली आपकी {word_hi} के लिए{sites_hi} {base.name} सब कुछ ऑनलाइन रखेगा।")
+        people_en = "1 person" if profile.employees == 1 else f"{profile.employees} people"
+        people_hi = "1 व्यक्ति" if profile.employees == 1 else f"{profile.employees} लोगों"
+        en.append(f"For your {word_en} with {people_en}{sites_en}, {base.name} keeps everything online.")
+        hi.append(f"{people_hi} वाली आपकी {word_hi} के लिए{sites_hi} {base.name} सब कुछ ऑनलाइन रखेगा।")
     else:
         en.append("You asked only for mobile lines, so this plan has just those – add fibre any time later.")
         hi.append("आपने सिर्फ़ मोबाइल प्लान माँगा है, इसलिए इसमें वही है – फ़ाइबर बाद में कभी भी जोड़ सकते हैं।")

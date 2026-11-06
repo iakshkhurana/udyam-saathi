@@ -1,0 +1,12 @@
+{
+  "name": "udyam-saathi-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test smoke.spec.ts",
+    "screenshots": "playwright test screenshots.spec.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}
