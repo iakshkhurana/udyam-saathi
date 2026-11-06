@@ -251,9 +251,9 @@ function TrackOrder({ orderId }: { orderId: string }) {
               <div className="font-semibold">{order.technician.name} · {t("track.technician")}</div>
               <div className="text-xs text-[#DCD3FF]">{pick(order.technician, "visit", lang)}</div>
             </div>
-            <a href="tel:198" aria-label={t("track.call")} className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-brand-800">
-              <Phone size={18} />
-            </a>
+            <span className="flex items-center gap-1.5 rounded-xl bg-white/15 px-2.5 py-2 font-mono text-xs">
+              <Phone size={14} /> {order.technician.phone_masked}
+            </span>
           </Reveal>
         )}
 

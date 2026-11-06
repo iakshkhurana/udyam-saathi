@@ -30,7 +30,14 @@
     "startHi": "हिंदी में शुरू करें",
     "chatIn": "Saathi also chats in",
     "strip": "Everything a small business needs, on one bill",
-    "stripItems": ["Fibre & 5G", "Mobile lines", "Cloud POS", "WhatsApp Business", "Cloud CCTV", "Website"],
+    "stripItems": [
+      "Fibre & 5G",
+      "Mobile lines",
+      "Cloud POS",
+      "WhatsApp Business",
+      "Cloud CCTV",
+      "Website"
+    ],
     "oldTag": "The old way is slow",
     "oldTitle1": "Paper quotes and field visits.",
     "oldTitle2": "Replaced by one chat.",
@@ -47,21 +54,50 @@
     "f4Title": "Live tracking, no calls",
     "f4Body": "Every step reaches you on WhatsApp. If we're running late, we tell you first and add a credit.",
     "f4Meta": "Install scheduled · next update by 6 pm",
-    "kycTiles": ["GST certificate ✓", "Udyam ✓", "ID: photo blurry", "Address proof"],
+    "kycTiles": [
+      "GST certificate ✓",
+      "Udyam ✓",
+      "ID: photo blurry",
+      "Address proof"
+    ],
     "statsTitle": "Why we built it: 5,000 leads from the case data",
     "statsSub": "Each feature answers one of these.",
     "stats": [
-      { "value": "7.4%", "label": "of leads get activated today" },
-      { "value": "17.6 days", "label": "on average from lead to activation" },
-      { "value": "48 / 368", "label": "sold bundles broke catalogue rules. Our rules engine blocks them." },
-      { "value": "6% → 28%", "label": "churn as status calls go from 1 to 5. So we update you first." }
+      {
+        "value": "7.4%",
+        "label": "of leads get activated today"
+      },
+      {
+        "value": "17.6 days",
+        "label": "on average from lead to activation"
+      },
+      {
+        "value": "48 / 368",
+        "label": "sold bundles broke catalogue rules. Our rules engine blocks them."
+      },
+      {
+        "value": "6% → 28%",
+        "label": "churn as status calls go from 1 to 5. So we update you first."
+      }
     ],
     "howTitle": "Four steps. One sitting.",
     "steps": [
-      { "t": "Chat", "d": "Answer a few questions by tapping or speaking." },
-      { "t": "Quote", "d": "See one monthly price and switch add-ons on or off." },
-      { "t": "Consent & KYC", "d": "Read a short notice, upload documents, e-sign." },
-      { "t": "Track", "d": "Follow install and activation on a link you can share." }
+      {
+        "t": "Chat",
+        "d": "Answer a few questions by tapping or speaking."
+      },
+      {
+        "t": "Quote",
+        "d": "See one monthly price and switch add-ons on or off."
+      },
+      {
+        "t": "Consent & KYC",
+        "d": "Read a short notice, upload documents, e-sign."
+      },
+      {
+        "t": "Track",
+        "d": "Follow install and activation on a link you can share."
+      }
     ],
     "ctaTitle": "Set up your business bundle today",
     "ctaSub": "No visit. One bill. Live tracking. You pay the first month at activation.",
@@ -194,7 +230,6 @@
     "delayTitle": "Install moved to {{date}}",
     "credit": "Sorry about this. We've added a {{amount}} credit to your first bill.",
     "technician": "Technician",
-    "call": "Call technician",
     "updates": "Updates on WhatsApp",
     "npsTitle": "How likely are you to recommend us to another business?",
     "npsLow": "Not likely",

@@ -1,5 +1,5 @@
 # lefts.md – Status of the Udyam Saathi build
-_Last updated: 2026-11-06 · Current phase: 5_
+_Last updated: 2026-11-06 · Current phase: 6_
 
 ## ✅ Done
 - Phase 0: repo structure, `.gitignore`, `.env.example`, `lefts.md`; data moved to `data/raw/YTL_TrackA_Udyam_Digital_Data/`
@@ -8,6 +8,7 @@ _Last updated: 2026-11-06 · Current phase: 5_
 - Phase 3: `services/advisor.py` (slot state machine, free-text parsing for numbers/cities/business types/needs/products/GSTIN, EN/HI guided mode with chips, clarifying questions, refusal of "ignore the rules", callback → back-office lead, LLM mode with tools `lookup_city_tier`/`map_business_type`/`lookup_gstin`/`recommend_bundle`/`save_profile_slot`/`request_callback`, automatic fallback to guided mode if the LLM call fails), `services/llm_client.py` (provider-agnostic `LLMClient`, Anthropic implementation), `services/propensity.py`, `routers/advisor.py`; `tests/test_advisor_scenarios.py` 15/15 → `docs/advisor_test_results.md`
 - Phase 4: `services/quote.py` (quote from session/profile, toggles + quantities re-validated by the rules engine, base-off removes dependents with a warning, WhatsApp share text/link), `routers/quote.py` (`POST/GET/PATCH /quotes`, `/accept` → order), `routers/consent.py` (DPDP consent record: purposes, notice version, language, hashed IP; `require_consent` gate for KYC), `services/storage.py` (Fernet-encrypted document store, audit log, retention job), `routers/privacy.py`, `services/tracker.py` + `routers/orders.py` (order creation and stage events)
 - Phase 5: Smart KYC – `services/kyc/ocr.py` (saturation-based watermark removal, Laplacian blur score, projection-profile deskew + OCR-label fallback −12°…+12°, Tesseract psm 6 with word positions, extra adaptive/Otsu/psm-4 passes for identifiers), `parsers.py` (doc-type detection, column-aware label/value parsing, wrapped-address joining, signatory stacked layout), `checks.py` (C01–C18), `service.py` (encrypted store, evaluation, verify → order status, sample loader), `routers/kyc.py` (all endpoints consent-gated, 403 without consent), `scripts/calibrate_blur.py`, `scripts/run_kyc_samples.py` → `docs/kyc_results.md`; `tests/test_kyc_samples.py` 15/15, `tests/test_api.py` 12/12
+- Phase 6: `services/tracker.py` – stages QUOTE_ACCEPTED → CONSENT_GIVEN → KYC_VERIFIED/KYC_REVIEW → INSTALL_SCHEDULED → INSTALLED → ACTIVATED (+ DELAYED, CANCELLED), install date = KYC date + max install days skipping Sundays, activation +1 day, EN/HI WhatsApp-style notifications for every event, fictional technician card, proactive delay (reason + new date + apology + automatic ₹100 credit), NPS after activation, referral → back-office lead; demo endpoints `/orders/{id}/advance` and `/delay`
 
 ## ⏳ Left for humans (do these yourself)
 - [ ] (filled in as the build progresses)
@@ -50,6 +51,10 @@ _Last updated: 2026-11-06 · Current phase: 5_
 - Final status mapping: C01 fail → INCOMPLETE; C02 fail → RETAKE; other fail → FAIL; warnings only → PASS_WITH_WARNINGS (order → `KYC_REVIEW`); clean → PASS (`KYC_VERIFIED`).
 - Wrapped addresses are joined without a space when line 1 ends in a letter and line 2 starts lowercase ("Maharashtr|a" → "Maharashtra").
 - "Fetch from DigiLocker" and "e-Sign with Aadhaar OTP" are simulated (OTP `123456`); DigiLocker in the demo loads the selected specimen applicant.
+
+- DELAYED is shown as a banner/flag on the current stage (order keeps its stage) rather than replacing the stage, so progress stays meaningful; the event log records a DELAYED event. A delay adds 3 working days.
+- Order IDs are 8-character hex short codes used directly in the public tracker link `/track/<id>` (no login; masked data only).
+- Event dates follow the simulated clock (`APP_TODAY` + schedule) so the demo timeline reads naturally.
 
 ## ❌ Known issues / failing tests
 - none yet
