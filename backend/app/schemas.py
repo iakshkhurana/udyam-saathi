@@ -24,6 +24,7 @@ class Profile(BaseModel):
     no_fibre: bool = False
     mobile_only: bool = False
     cheapest: bool = False
+    use_defaults: bool = False
 
     @property
     def gstin_active(self) -> bool:

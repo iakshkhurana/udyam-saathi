@@ -302,7 +302,7 @@ def _why(profile: Profile, items: list[BundleItem], monthly: int, setup: int, co
         hi.append("आपने सिर्फ़ मोबाइल प्लान माँगा है, इसलिए इसमें वही है – फ़ाइबर बाद में कभी भी जोड़ सकते हैं।")
     extras = [i for i in active if not i.is_base and i.product_id not in LINE_IDS][:2]
     if extras:
-        en.append(" ".join(f"{cat[i.product_id].name}: {i.reason_en.lower()}." for i in extras))
+        en.append(" ".join(f"{cat[i.product_id].name}: {i.reason_en}." for i in extras))
         hi.append(" ".join(f"{cat[i.product_id].name}: {i.reason_hi}।" for i in extras))
     en.append(f"{inr(monthly)}/month + GST, {inr(setup)} one-time setup, {contract}-month contract.")
     hi.append(f"{inr(monthly)}/महीना + GST, {inr(setup)} एक बार का सेटअप, {contract} महीने का कॉन्ट्रैक्ट।")
@@ -363,7 +363,7 @@ def recommend_bundle(profile: Profile) -> BundleResult:
             b.add_need(need)
         for pid in extra_requests:
             b.try_add(pid)
-        if not profile.needs and not extra_requests:
+        if profile.use_defaults or (not profile.needs and not extra_requests):
             b.add_defaults()
             name = BUNDLE_NAMES[profile.segment]
             if profile.segment == "micro" and not profile.gstin_active:

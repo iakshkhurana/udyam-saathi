@@ -62,6 +62,8 @@ def configure_logging(log_file: str | None = None) -> None:
         h.setFormatter(formatter)
         root.addHandler(h)
     root.setLevel(logging.INFO)
+    for name in ("httpx", "httpx2"):
+        logging.getLogger(name).setLevel(logging.WARNING)
     for name in ("uvicorn", "uvicorn.access", "uvicorn.error"):
         lg = logging.getLogger(name)
         lg.handlers.clear()

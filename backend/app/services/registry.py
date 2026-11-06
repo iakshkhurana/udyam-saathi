@@ -1,3 +1,5 @@
+import re
+
 from rapidfuzz import fuzz, process
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -42,9 +44,20 @@ def city_tier(db: Session, city: str) -> dict:
     return {"city": rec.city, "tier": rec.city_tier, "state": rec.state, "known": True}
 
 
+GENERIC_WORDS = {"shop", "store", "unit", "chain", "office", "agency", "studio", "centre", "center", "group", "firm",
+                 "press", "workshop", "lab", "hotel", "budget", "retail", "business", "my", "a", "the", "i", "run",
+                 "have", "small", "big", "thoda", "bada", "hai", "mera", "meri"}
+
+
 def map_business_type(db: Session, text: str) -> dict | None:
+    """Keyword match on distinctive words first, then fuzzy. Generic-only text ('shop') returns None."""
     types = {b.business_type: b.segment for b in db.scalars(select(BusinessTypeSegment))}
-    match = process.extractOne(text.strip(), types.keys(), scorer=fuzz.WRatio, score_cutoff=70)
+    words = set(re.findall(r"[a-z]+", text.lower()))
+    if not words - GENERIC_WORDS:
+        return None
+    keyed = [t for t in types if (set(t.lower().split()) - GENERIC_WORDS) & words]
+    match = process.extractOne(text.lower(), keyed or types.keys(), scorer=fuzz.token_sort_ratio if keyed else fuzz.WRatio,
+                               score_cutoff=0 if keyed else 88)
     if not match:
         return None
-    return {"business_type": match[0], "segment": types[match[0]], "score": round(match[1])}
+    return {"business_type": match[0], "segment": types[match[0]], "score": 100 if keyed else round(match[1])}

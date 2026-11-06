@@ -10,7 +10,7 @@ from .config import BACKEND_DIR, get_settings
 from .db import Base, SessionLocal, engine
 from .limiter import limiter
 from .models import Product
-from .routers import registry
+from .routers import advisor, registry
 from .services.data_loader import load
 from .utils.masking import configure_logging
 
@@ -41,7 +41,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for r in (registry,):
+for r in (registry, advisor):
     app.include_router(r.router, prefix="/api")
 
 
